@@ -1,0 +1,36 @@
+﻿@using SabeNaoSabe.RazorClassLibrary.Data
+
+
+@if (@Visible)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var q in qList)
+            {
+                <tr>
+                    <td>@q.Id</td>
+                    <td>@q.Name</td>
+                    <td>@q.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    [Parameter]
+    public List<Questionario> qList { get; set; }
+
+    [Parameter]
+    public bool Visible { get; set; }
+
+
+}

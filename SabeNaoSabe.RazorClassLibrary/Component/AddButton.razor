@@ -1,0 +1,18 @@
+﻿@if (Visible)
+{
+    <div>
+        <button class="btn btn-primary" @onclick="CreateUpdateQuestionario">Add</button>
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public bool Visible { get; set; }
+    [Parameter]
+    public EventCallback CreateUpdateQuestionarioClicked { get; set; }
+    private void CreateUpdateQuestionario()
+    {
+        CreateUpdateQuestionarioClicked.InvokeAsync();
+    }
+}

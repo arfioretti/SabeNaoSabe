@@ -1,0 +1,48 @@
+﻿@using SabeNaoSabe.RazorClassLibrary.Services
+@using SabeNaoSabe.RazorClassLibrary.Data
+@using SabeNaoSabe.RazorClassLibrary.Component
+@using SabeNaoSabe.RazorClassLibrary.ViewModel
+
+<AddButton Visible="@showAddButton" CreateUpdateQuestionarioClicked="QuestionarioCreateUpdate" ></AddButton>
+<QuestionarioTable Visible="@showQuestionarioTable" qList="questionariosList"></QuestionarioTable>
+<QuestionarioCreateUpdate Visible="@showQuestionarioCreateUpdate" QuestionarioModel="@QuestionarioModel" 
+    SaveClicked="SavedClicked"/>
+
+@code {
+    private bool showAddButton = true;
+    private bool showQuestionarioTable = true;
+    private bool showQuestionarioCreateUpdate = false;
+
+    private List<Questionario> questionariosList = new List<Questionario>();
+    public QuestionarioViewModel QuestionarioModel = new QuestionarioViewModel();
+
+
+    [Inject]
+    private IQuestionarioService questionarioService { get; set; }
+
+    protected override void OnInitialized()
+    {
+        LoadQuestionario();
+    }
+    private async void LoadQuestionario()
+    {
+        questionariosList = await questionarioService.GetAllAsync();
+    }
+
+    private void QuestionarioCreateUpdate()
+    {
+        showAddButton = false;
+        showQuestionarioTable = false;
+        showQuestionarioCreateUpdate = true;
+
+    }
+    private async void SavedClicked()
+    {
+        await questionarioService.AddQuestionario(QuestionarioModel);
+
+        showAddButton = true;
+        showQuestionarioTable = true;
+        showQuestionarioCreateUpdate = false;
+    }
+
+}

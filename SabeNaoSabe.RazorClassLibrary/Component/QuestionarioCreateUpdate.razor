@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using SabeNaoSabe.RazorClassLibrary.ViewModel
+
+@if (Visible)
+{
+    <h3>@Title</h3>
+
+    <EditForm Model="QuestionarioModel" OnValidSubmit="CreateUpdateQuestionario1">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="form-group">
+            <label form="name">Name</label>
+            <InputText id="name" @bind-Value="QuestionarioModel.Name" class="form-control"></InputText>
+            <ValidationMessage For="@(()=>QuestionarioModel.Name)"></ValidationMessage>
+        </div>
+        <div class="form-group">
+            <label form="description">Description</label>
+            <InputText id="description" @bind-Value="QuestionarioModel.Description" class="form-control"></InputText>
+            <ValidationMessage For="@(()=>QuestionarioModel.Description)"></ValidationMessage>
+        </div>
+        <button type="submit" class="btn btn-primary m-md-1">Create</button>
+        <button class="btn btn-primary m-md-1" @onclick="CancelQuestionario">Back</button>
+    </EditForm>
+}
+
+
+@code {
+    [Parameter]
+    public bool Visible { get; set; }
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public QuestionarioViewModel QuestionarioModel { get; set; } = new QuestionarioViewModel();
+    [Parameter]
+    public EventCallback SaveClicked { get; set; }
+    [Parameter]
+    public EventCallback CancelClicked { get; set; }
+
+    private async Task CreateUpdateQuestionario1()
+    {
+        await SaveClicked.InvokeAsync(QuestionarioModel);
+        QuestionarioModel.Name = null;
+        QuestionarioModel.Description = null;
+    }
+    private async Task CancelQuestionario()
+    {
+        await CancelClicked.InvokeAsync(QuestionarioModel);
+    }
+}

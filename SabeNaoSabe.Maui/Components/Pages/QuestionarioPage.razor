@@ -1,0 +1,34 @@
+﻿@page "/Questionario"
+
+@using SabeNaoSabe.RazorClassLibrary.Component
+@using SabeNaoSabe.RazorClassLibrary.Services
+@using SabeNaoSabe.RazorClassLibrary.Data
+@using SabeNaoSabe.RazorClassLibrary.ViewModel
+
+<h3>QuestionarioPage</h3>
+
+<QuestionarioComponent></QuestionarioComponent>
+
+
+@code {
+    private List<Questionario> questionariosList = new List<Questionario>();
+    private QuestionarioViewModel questonarioViewModel;
+    private bool showAddButton = true;
+
+    [Inject]
+    private IQuestionarioService questionarioService { get; set; }
+
+    protected override void OnInitialized()
+    {
+        LoadQuestionario();
+    }
+    private async void LoadQuestionario()
+    {
+        questionariosList = await questionarioService.GetAllAsync();
+    }
+    private async void CreateUpdateQuestionario()
+    {
+        questonarioViewModel = new QuestionarioViewModel();
+    }
+
+}
