@@ -17,8 +17,8 @@
             <InputText id="description" @bind-Value="QuestionarioModel.Description" class="form-control"></InputText>
             <ValidationMessage For="@(()=>QuestionarioModel.Description)"></ValidationMessage>
         </div>
-        <button type="submit" class="btn btn-primary m-md-1">Create</button>
-        <button class="btn btn-primary m-md-1" @onclick="CancelQuestionario">Back</button>
+        <button type="submit" class="btn btn-primary m-md-1">Save</button>
+        <button class="btn btn-primary m-md-1" @onclick="CancelQuestionario">Cancel</button>
     </EditForm>
 }
 
@@ -37,12 +37,17 @@
 
     private async Task CreateUpdateQuestionario1()
     {
+        if (Title == "Create") QuestionarioModel.Id = 0;
         await SaveClicked.InvokeAsync(QuestionarioModel);
+
         QuestionarioModel.Name = null;
         QuestionarioModel.Description = null;
     }
     private async Task CancelQuestionario()
     {
+        QuestionarioModel.Name = null;
+        QuestionarioModel.Description = null;
+
         await CancelClicked.InvokeAsync(QuestionarioModel);
     }
 }

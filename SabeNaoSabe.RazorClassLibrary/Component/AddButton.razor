@@ -11,6 +11,7 @@
     public bool Visible { get; set; }
     [Parameter]
     public EventCallback CreateUpdateQuestionarioClicked { get; set; }
+    
     private void CreateUpdateQuestionario()
     {
         CreateUpdateQuestionarioClicked.InvokeAsync();

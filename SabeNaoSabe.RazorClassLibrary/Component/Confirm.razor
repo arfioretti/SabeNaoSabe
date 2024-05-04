@@ -1,0 +1,32 @@
+﻿@if (Visible)
+{
+    <div class="confirmation-modal">
+        <h3>Confirm Deletion</h3>
+        <p>Voce tem certeza que deseja deletar?</p>
+        <div>
+            <button @onclick="DeleteQuestionario">Yes</button>
+            <button @onclick="CancelDelete">No</button>
+        </div>
+
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool Visible { get; set; }
+    [Parameter]
+    public EventCallback DeleteQuestionarioClicked { get; set; }
+    [Parameter]
+    public EventCallback CancelQuestionarioClicked { get; set; }
+
+
+    private async void CancelDelete()
+    {
+        await CancelQuestionarioClicked.InvokeAsync(true);
+    }
+    private async void DeleteQuestionario()
+    {
+        await DeleteQuestionarioClicked.InvokeAsync();
+    }
+
+}

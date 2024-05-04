@@ -9,6 +9,7 @@
                 <th>Id</th>
                 <th>Name</th>
                 <th>Description</th>
+                <th>Ação</th>
             </tr>
         </thead>
         <tbody>
@@ -18,6 +19,8 @@
                     <td>@q.Id</td>
                     <td>@q.Name</td>
                     <td>@q.Description</td>
+                    <button class="btn btn-primary md-1" @onclick="()=>EditQuestionario(q.Id)">Edit</button>
+                    <button class="btn btn-primary md-1" @onclick="()=>DeleteQuestionario(q.Id)">Delete</button>
                 </tr>
             }
         </tbody>
@@ -28,9 +31,19 @@
 @code {
     [Parameter]
     public List<Questionario> qList { get; set; }
-
+    [Parameter]
+    public EventCallback<int> EditClicked { get; set; }
+    [Parameter]
+    public EventCallback<int> DeleteClicked { get; set; }
     [Parameter]
     public bool Visible { get; set; }
 
-
+    private void EditQuestionario(int id)
+    {
+        EditClicked.InvokeAsync(id);
+    }
+    private void DeleteQuestionario(int id)
+    {
+        DeleteClicked.InvokeAsync(id);
+    }
 }

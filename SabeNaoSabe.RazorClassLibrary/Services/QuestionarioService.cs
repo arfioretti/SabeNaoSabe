@@ -23,7 +23,8 @@ namespace SabeNaoSabe.RazorClassLibrary.Services
 
         public async Task<Questionario> GetByIdAsync(int id)
         {
-            return questionariosList.Where(u => u.Id == id).FirstOrDefault();
+            var Questionario = questionariosList.Where(u => u.Id == id).FirstOrDefault();
+            return Questionario;
         }
         public async Task AddQuestionario(QuestionarioViewModel questionarioViewModel)
         {
@@ -34,5 +35,24 @@ namespace SabeNaoSabe.RazorClassLibrary.Services
             questionario.Description = questionarioViewModel.Description;
             questionariosList.Add(questionario);
         }
-    }   
+
+        public  async Task EditQuestionario(QuestionarioViewModel questionarioViewModel)
+        {
+            foreach(var q in questionariosList)
+            {
+                if(q.Id == questionarioViewModel.Id)
+                {
+                    q.Name = questionarioViewModel.Name;
+                    q.Description = questionarioViewModel.Description;
+                }
+            }
+        }
+
+        public async Task DeleteQuestionario(int id)
+        {
+            var itemToRemove = questionariosList.SingleOrDefault(r => r.Id == id);
+            if (itemToRemove != null)
+                questionariosList.Remove(itemToRemove);
+        }
+    }
 }
