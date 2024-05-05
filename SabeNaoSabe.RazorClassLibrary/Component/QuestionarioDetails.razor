@@ -1,0 +1,31 @@
+﻿@using SabeNaoSabe.RazorClassLibrary.ViewModel
+
+
+@if (Visible)
+{
+    <div>
+        <label >Name</label>
+        <p>@QuestionarioModel.Name</p>
+    </div>
+    <div>
+        <label>Description</label>
+        <p>@QuestionarioModel.Description</p>
+    </div>
+    <button class="btn btn-primary m-md-1" @onclick="BackQuestionario">Back</button>
+}
+@code {
+    [Parameter]
+    public bool Visible { get; set; }
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public EventCallback BackClicked { get; set; }
+    [Parameter]
+    public QuestionarioViewModel QuestionarioModel { get; set; } = new QuestionarioViewModel();
+
+
+    private void BackQuestionario()
+    {
+        BackClicked.InvokeAsync();
+    }
+}

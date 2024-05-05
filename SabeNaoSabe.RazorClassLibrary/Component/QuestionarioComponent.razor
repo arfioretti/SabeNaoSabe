@@ -5,15 +5,23 @@
 
 <AddButton Visible="@showAddButton" CreateUpdateQuestionarioClicked="QuestionarioCreateUpdate" ></AddButton>
 
-<QuestionarioTable Visible="@showQuestionarioTable" qList="questionariosList" EditClicked="EditQuestionario" DeleteClicked="DeleteQuestionario" />
+<QuestionarioTable  Visible="@showQuestionarioTable" 
+                    qList="questionariosList"
+                    DetailsClicked="DetailsQuestionario"
+                    EditClicked="EditQuestionario"
+                    DeleteClicked="DeleteQuestionario" />
 
 <QuestionarioCreateUpdate Visible="@showQuestionarioCreateUpdate" QuestionarioModel="@QuestionarioModel" 
     SaveClicked="SavedClicked" CancelClicked="CanceledClicked" title="@strTitle"/>
+
 <Confirm Visible="@showConfirm" DeleteQuestionarioClicked="DeleteQuestionarioConfirm" CancelQuestionarioClicked="CancelQuestionarioConfirm"/>
+
+<QuestionarioDetails BackClicked="CanceledClicked" QuestionarioModel="@QuestionarioModel" Title="@strTitle" Visible="@showQuestionarioDetails" />
 
 @code {
     private bool showAddButton = true;
     private bool showQuestionarioTable = true;
+    private bool showQuestionarioDetails = false;
     private bool showQuestionarioCreateUpdate = false;
     private bool showConfirm = false;
     private string strTitle;
@@ -41,7 +49,7 @@
         showAddButton = false;
         showQuestionarioTable = false;
         showQuestionarioCreateUpdate = true;
-
+        showQuestionarioDetails = false;
     }
     private async void SavedClicked()
     {
@@ -63,8 +71,23 @@
         showAddButton = true;
         showQuestionarioTable = true;
         showQuestionarioCreateUpdate = false;
+        showQuestionarioDetails = false;
+
     }
-    private async  void EditQuestionario(int id)
+    private async void DetailsQuestionario(int id)
+    {
+        strTitle = "Details";
+        var quest = await questionarioService.GetByIdAsync(id);
+        showAddButton = false;
+        showQuestionarioTable = false;
+        showQuestionarioCreateUpdate = false;
+        QuestionarioModel.Description = quest.Description;
+        QuestionarioModel.Name = quest.Name;
+        QuestionarioModel.Id = quest.Id;
+        showQuestionarioDetails = true;
+
+    }
+    private async void EditQuestionario(int id)
     {
         strTitle = "Edit";
         var quest = await questionarioService.GetByIdAsync(id);

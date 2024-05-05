@@ -19,6 +19,7 @@
                     <td>@q.Id</td>
                     <td>@q.Name</td>
                     <td>@q.Description</td>
+                    <button class="btn btn-primary md-1" @onclick="()=>DetailsQuestionario(q.Id)">Details</button>
                     <button class="btn btn-primary md-1" @onclick="()=>EditQuestionario(q.Id)">Edit</button>
                     <button class="btn btn-primary md-1" @onclick="()=>DeleteQuestionario(q.Id)">Delete</button>
                 </tr>
@@ -34,10 +35,16 @@
     [Parameter]
     public EventCallback<int> EditClicked { get; set; }
     [Parameter]
+    public EventCallback<int> DetailsClicked { get; set; }
+    [Parameter]
     public EventCallback<int> DeleteClicked { get; set; }
     [Parameter]
     public bool Visible { get; set; }
 
+    private void DetailsQuestionario(int id)
+    {
+        DetailsClicked.InvokeAsync(id);
+    }
     private void EditQuestionario(int id)
     {
         EditClicked.InvokeAsync(id);
