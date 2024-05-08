@@ -19,6 +19,8 @@
 <QuestionarioDetails BackClicked="CanceledClicked" QuestionarioModel="@QuestionarioModel" Title="@strTitle" Visible="@showQuestionarioDetails" />
 
 @code {
+
+
     private bool showAddButton = true;
     private bool showQuestionarioTable = true;
     private bool showQuestionarioDetails = false;
@@ -27,12 +29,14 @@
     private string strTitle;
     private int Id;
 
+
     private List<Questionario> questionariosList = new List<Questionario>();
-    public QuestionarioViewModel QuestionarioModel = new QuestionarioViewModel();
 
 
-    [Inject]
-    private IQuestionarioService questionarioService { get; set; }
+    private QuestionarioViewModel QuestionarioModel = new QuestionarioViewModel();
+
+    private QuestionarioService questionarioService = new QuestionarioService();
+
 
     protected override void OnInitialized()
     {
@@ -53,6 +57,7 @@
     }
     private async void SavedClicked()
     {
+
         if(QuestionarioModel.Id > 0)
         {
             await questionarioService.EditQuestionario(QuestionarioModel);

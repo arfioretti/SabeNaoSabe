@@ -1,24 +1,18 @@
 ﻿using SabeNaoSabe.RazorClassLibrary.Data;
 using SabeNaoSabe.RazorClassLibrary.ViewModel;
+using System.Net.Http.Json;
 
 namespace SabeNaoSabe.RazorClassLibrary.Services
 {
     public  class QuestionarioService : IQuestionarioService
     {
-        public readonly List<Questionario> questionariosList;
-
-        public QuestionarioService()
-        {
-            questionariosList = new List<Questionario>()
-            {
-                new Questionario() { Id = 1, Name = "q1", Description = "primeiro questionario" },
-                new Questionario() { Id = 2, Name = "q2", Description = "segundo questionario" }
-            };
-        }
+        static HttpClient _httpClient = new HttpClient();
+        public List<Questionario> questionariosList;
 
         public async Task<List<Questionario>> GetAllAsync()
         {
-            return questionariosList;
+            var x = await _httpClient.GetFromJsonAsync<List<Questionario>>("https://localhost:7256/api/Questionario");
+            return x;
         }
 
         public async Task<Questionario> GetByIdAsync(int id)
@@ -30,17 +24,17 @@ namespace SabeNaoSabe.RazorClassLibrary.Services
         {
             var IdMax = questionariosList.Max(u => u.Id);
             Questionario questionario = new Questionario();
-            questionario.Id = IdMax+1;
+            questionario.Id = IdMax + 1;
             questionario.Name = questionarioViewModel.Name;
             questionario.Description = questionarioViewModel.Description;
             questionariosList.Add(questionario);
         }
 
-        public  async Task EditQuestionario(QuestionarioViewModel questionarioViewModel)
+        public async Task EditQuestionario(QuestionarioViewModel questionarioViewModel)
         {
-            foreach(var q in questionariosList)
+            foreach (var q in questionariosList)
             {
-                if(q.Id == questionarioViewModel.Id)
+                if (q.Id == questionarioViewModel.Id)
                 {
                     q.Name = questionarioViewModel.Name;
                     q.Description = questionarioViewModel.Description;
