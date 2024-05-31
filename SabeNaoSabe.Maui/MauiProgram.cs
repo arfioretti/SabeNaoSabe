@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using SabeNaoSabe.RazorClassLibrary.Services;
 
 namespace SabeNaoSabe.Maui
 {
@@ -19,7 +18,7 @@ namespace SabeNaoSabe.Maui
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

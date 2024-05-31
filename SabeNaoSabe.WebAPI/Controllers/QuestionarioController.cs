@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SabeNaoSabe.WebAPI.Data;
-using SabeNaoSabe.WebAPI.Entity;
+using SabeNaoSabe.WebAPI.Model;
 
 namespace SabeNaoSabe.WebAPI.Controllers
 {
@@ -14,19 +15,40 @@ namespace SabeNaoSabe.WebAPI.Controllers
 
         public QuestionarioController(ApplicationDbContext db)
         {
-            _db = db;   
+            _db = db;
         }
         [HttpGet]
-        public IEnumerable<Questionario> Gets() 
-        { 
-            return _db.Questionarios.ToList();
+        public ActionResult<IEnumerable<QuestionarioModel>> GetQuestionarios()
+        {
+            return Ok(_db.Questionarios.ToList());
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<QuestionarioModel?>> GetByIdQuestionario(int id)
+        {
+            return await _db.Questionarios.Where(u=>u.Id == id).SingleOrDefaultAsync();
         }
         [HttpPost]
-        public IActionResult Posts(Questionario questionario) 
+        public async Task<ActionResult> PostQuestionario([FromBody]QuestionarioModel questionario) 
         {
-            _db.Questionarios.Add(questionario);
-            _db.SaveChanges();
+            await _db.Questionarios.AddAsync(questionario);
+            await _db.SaveChangesAsync();
+            return Ok(questionario);
+        }
+        [HttpPut]
+        public async Task<ActionResult> PutQuestionario(QuestionarioModel questionario)
+        {
+            _db.Questionarios.Update(questionario);        
+            await _db.SaveChangesAsync();
             return Ok();
         }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<QuestionarioModel?>> DeleteQuestionario(int id)
+        {
+            var questionario = await _db.Questionarios.Where(u => u.Id == id).SingleOrDefaultAsync();
+            _db.Questionarios.Remove(questionario);
+            await _db.SaveChangesAsync();
+            return Ok(questionario);
+        }
+
     }
 }

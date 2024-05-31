@@ -12,7 +12,7 @@ using SabeNaoSabe.WebAPI.Data;
 namespace SabeNaoSabe.WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240506043654_initial")]
+    [Migration("20240514152055_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -223,7 +223,7 @@ namespace SabeNaoSabe.WebAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("SabeNaoSabe.WebAPI.Entity.Questionario", b =>
+            modelBuilder.Entity("SabeNaoSabe.WebAPI.Model.QuestionarioModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

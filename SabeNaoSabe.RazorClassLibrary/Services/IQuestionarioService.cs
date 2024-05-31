@@ -1,15 +1,13 @@
-﻿using SabeNaoSabe.RazorClassLibrary.Data;
-using SabeNaoSabe.RazorClassLibrary.ViewModel;
+﻿using SabeNaoSabe.RazorClassLibrary.Models;
 
 
 namespace SabeNaoSabe.RazorClassLibrary.Services
 {
     public interface IQuestionarioService
-    { 
-        Task<List<Questionario>> GetAllAsync();
-        Task<Questionario> GetByIdAsync(int id);
-        Task AddQuestionario(QuestionarioViewModel questionarioViewModel);
-        Task EditQuestionario(QuestionarioViewModel questionarioViewModel);
-        Task DeleteQuestionario(int id);
+    {
+        Task<List<Questionario>> GetQuestionarios();
+        //Task AddQuestionario(Questionario questionario);
+        //Task EditQuestionario(Questionario questionario);
+        //Task DeleteQuestionario(int id);
     }
 }

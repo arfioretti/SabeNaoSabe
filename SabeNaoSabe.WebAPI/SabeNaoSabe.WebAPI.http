@@ -3,6 +3,4 @@
 GET {{SabeNaoSabe.WebAPI_HostAddress}}/weatherforecast/
 Accept: application/json
 ###
-GET {{SabeNaoSabe.WebAPI_HostAddress}}/api/user/
-Authorization: Bearer 
-###
+

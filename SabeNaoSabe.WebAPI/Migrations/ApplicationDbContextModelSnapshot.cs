@@ -220,7 +220,7 @@ namespace SabeNaoSabe.WebAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("SabeNaoSabe.WebAPI.Entity.Questionario", b =>
+            modelBuilder.Entity("SabeNaoSabe.WebAPI.Model.QuestionarioModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SabeNaoSabe.WebAPI.Entity;
+using SabeNaoSabe.WebAPI.Model;
 
 namespace SabeNaoSabe.WebAPI.Data
 {
@@ -11,6 +11,6 @@ namespace SabeNaoSabe.WebAPI.Data
         {
             
         }
-        public DbSet<Questionario> Questionarios { get; set; }
+        public DbSet<QuestionarioModel> Questionarios { get; set; }
     }
 }

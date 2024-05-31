@@ -1,52 +1,45 @@
-﻿using SabeNaoSabe.RazorClassLibrary.Data;
-using SabeNaoSabe.RazorClassLibrary.ViewModel;
-using System.Net.Http.Json;
+﻿using SabeNaoSabe.RazorClassLibrary.Models;
 
 namespace SabeNaoSabe.RazorClassLibrary.Services
 {
-    public  class QuestionarioService : IQuestionarioService
+    public class QuestionarioService : IQuestionarioService
     {
-        static HttpClient _httpClient = new HttpClient();
-        public List<Questionario> questionariosList;
-
-        public async Task<List<Questionario>> GetAllAsync()
+        private string _baseUrl = "https://localhost:7256";
+        public async Task<List<Questionario>> GetQuestionarios()
         {
-            var x = await _httpClient.GetFromJsonAsync<List<Questionario>>("https://localhost:7256/api/Questionario");
-            return x;
-        }
-
-        public async Task<Questionario> GetByIdAsync(int id)
-        {
-            var Questionario = questionariosList.Where(u => u.Id == id).FirstOrDefault();
-            return Questionario;
-        }
-        public async Task AddQuestionario(QuestionarioViewModel questionarioViewModel)
-        {
-            var IdMax = questionariosList.Max(u => u.Id);
-            Questionario questionario = new Questionario();
-            questionario.Id = IdMax + 1;
-            questionario.Name = questionarioViewModel.Name;
-            questionario.Description = questionarioViewModel.Description;
-            questionariosList.Add(questionario);
-        }
-
-        public async Task EditQuestionario(QuestionarioViewModel questionarioViewModel)
-        {
-            foreach (var q in questionariosList)
+            List<Questionario> questionarios = new List<Questionario>();
+            using (var client = new HttpClient())
             {
-                if (q.Id == questionarioViewModel.Id)
-                {
-                    q.Name = questionarioViewModel.Name;
-                    q.Description = questionarioViewModel.Description;
-                }
+                string url = $"{_baseUrl}/api/questionario";
+                var response = await client.GetAsync(url);
+                int i = 0;
             }
+            
+            return questionarios;
         }
+       
+        //public async Task<Questionario> GetByIdAsync(int id)
+        //{
+        //}
+        //public async Task AddQuestionario(Questionario questionario)
+        //{
+        //    return questionario;
+        //}
+        //public async Task EditQuestionario(Questionario questionario)
+        //{
+        //    await _httpClient.PostAsJsonAsync("/api/Questionario", questionario);
+        //}
+        //public async Task DeleteQuestionario(int id)
+        //{
+        //}
 
-        public async Task DeleteQuestionario(int id)
-        {
-            var itemToRemove = questionariosList.SingleOrDefault(r => r.Id == id);
-            if (itemToRemove != null)
-                questionariosList.Remove(itemToRemove);
-        }
+        //public Task AddQuestionario(Questionario questionario)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public Task EditQuestionario(Questionario questionario)
+        //{
+        //}
     }
 }
