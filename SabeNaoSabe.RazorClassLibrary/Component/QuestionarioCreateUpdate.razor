@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
-@using SabeNaoSabe.RazorClassLibrary.ViewModel
+@using SabeNaoSabe.RazorClassLibrary.Models
 
 @if (Visible)
 {
@@ -17,6 +17,11 @@
             <InputText id="description" @bind-Value="QuestionarioModel.Description" class="form-control"></InputText>
             <ValidationMessage For="@(()=>QuestionarioModel.Description)"></ValidationMessage>
         </div>
+        <div class="form-group">
+            <label form="email">Email</label>
+            <InputText id="email" @bind-Value="QuestionarioModel.Email" class="form-control"></InputText>
+            <ValidationMessage For="@(()=>QuestionarioModel.Email)"></ValidationMessage>
+        </div>
         <button type="submit" class="btn btn-primary m-md-1">Save</button>
         <button class="btn btn-primary m-md-1" @onclick="CancelQuestionario">Cancel</button>
     </EditForm>
@@ -29,7 +34,7 @@
     [Parameter]
     public string Title { get; set; }
     [Parameter]
-    public QuestionarioViewModel QuestionarioModel { get; set; } = new QuestionarioViewModel();
+    public QuestionarioModel QuestionarioModel { get; set; } = new QuestionarioModel();
     [Parameter]
     public EventCallback SaveClicked { get; set; }
     [Parameter]
@@ -39,9 +44,6 @@
     {
         if (Title == "Create") QuestionarioModel.Id = 0;
         await SaveClicked.InvokeAsync(QuestionarioModel);
-
-        QuestionarioModel.Name = null;
-        QuestionarioModel.Description = null;
     }
     private async Task CancelQuestionario()
     {

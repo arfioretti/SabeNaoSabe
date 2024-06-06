@@ -1,57 +1,64 @@
 ﻿@using SabeNaoSabe.RazorClassLibrary.Models
 
-
-
-@if (@Visible)
+@if(qList.Count == 0)
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var q in qList)
-            {
-                <tr>
-                    <td>@q.Id</td>
-                    <td>@q.Name</td>
-                    <td>@q.Description</td>
-                    <button class="btn btn-primary md-1" @onclick="()=>DetailsQuestionario(q.Id)">Details</button>
-                    <button class="btn btn-primary md-1" @onclick="()=>EditQuestionario(q.Id)">Edit</button>
-                    <button class="btn btn-primary md-1" @onclick="()=>DeleteQuestionario(q.Id)">Delete</button>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <p>Loading...</p>
 }
+else
+{
+    @if (@Visible)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var q in qList)
+                {
+                    <tr>
+                        <td>@q.Id</td>
+                        <td>@q.Name</td>
+                        <td>@q.Description</td>
+                        <button class="btn btn-primary md-1" @onclick="()=>DetailsQuestionario(q)">Details</button>
+                        <button class="btn btn-primary md-1" @onclick="()=>EditQuestionario(q)">Edit</button>
+                        <button class="btn btn-primary md-1" @onclick="()=>DeleteQuestionario(q)">Delete</button>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+
 
 
 @code {
     [Parameter]
-    public List<Questionario> qList { get; set; }
+    public List<QuestionarioModel> qList { get; set; }
     [Parameter]
-    public EventCallback<int> EditClicked { get; set; }
+    public EventCallback<QuestionarioModel> EditClicked { get; set; }
     [Parameter]
-    public EventCallback<int> DetailsClicked { get; set; }
+    public EventCallback<QuestionarioModel> DetailsClicked { get; set; }
     [Parameter]
-    public EventCallback<int> DeleteClicked { get; set; }
+    public EventCallback<QuestionarioModel> DeleteClicked { get; set; }
     [Parameter]
     public bool Visible { get; set; }
 
-    private void DetailsQuestionario(int id)
+    private void EditQuestionario(QuestionarioModel questionarioModel)
     {
-        DetailsClicked.InvokeAsync(id);
+        EditClicked.InvokeAsync(questionarioModel);
     }
-    private void EditQuestionario(int id)
+    private void DetailsQuestionario(QuestionarioModel questionarioModel)
     {
-        EditClicked.InvokeAsync(id);
+        DetailsClicked.InvokeAsync(questionarioModel);
     }
-    private void DeleteQuestionario(int id)
+    private void DeleteQuestionario(QuestionarioModel questionarioModel)
     {
-        DeleteClicked.InvokeAsync(id);
+        DeleteClicked.InvokeAsync(questionarioModel);
     }
 }

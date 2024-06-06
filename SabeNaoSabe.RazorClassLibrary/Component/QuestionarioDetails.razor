@@ -1,4 +1,4 @@
-﻿@using SabeNaoSabe.RazorClassLibrary.ViewModel
+﻿@using SabeNaoSabe.RazorClassLibrary.Models
 
 @if (Visible)
 {
@@ -20,7 +20,7 @@
     [Parameter]
     public EventCallback BackClicked { get; set; }
     [Parameter]
-    public QuestionarioViewModel QuestionarioModel { get; set; } = new QuestionarioViewModel();
+    public QuestionarioModel QuestionarioModel { get; set; } = new QuestionarioModel();
 
 
     private void BackQuestionario()

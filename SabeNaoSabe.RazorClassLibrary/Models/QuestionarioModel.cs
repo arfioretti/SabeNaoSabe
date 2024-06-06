@@ -1,6 +1,6 @@
 ﻿namespace SabeNaoSabe.RazorClassLibrary.Models
 {
-    public class Questionario
+    public class QuestionarioModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
