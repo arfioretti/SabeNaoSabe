@@ -7,6 +7,6 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-//builder.Services.AddSingleton<IQuestionarioService, QuestionarioService>();
+builder.Services.AddSingleton<IQuestionarioService, QuestionarioService>();
 
 await builder.Build().RunAsync();

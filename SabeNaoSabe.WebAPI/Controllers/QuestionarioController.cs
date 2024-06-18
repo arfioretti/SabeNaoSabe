@@ -18,7 +18,7 @@ namespace SabeNaoSabe.WebAPI.Controllers
             _db = db;
         }
         [HttpGet]
-        public ActionResult<IEnumerable<QuestionarioModel>> GetQuestionarios()
+        public ActionResult <IEnumerable<QuestionarioModel>> GetQuestionarios()
         {
             return Ok(_db.Questionarios.ToList());
         }
@@ -41,10 +41,10 @@ namespace SabeNaoSabe.WebAPI.Controllers
             await _db.SaveChangesAsync();
             return Ok();
         }
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<QuestionarioModel?>> DeleteQuestionario(int id)
+        [HttpDelete]
+        public async Task<ActionResult<QuestionarioModel?>> DeleteQuestionario(QuestionarioModel questionario)
         {
-            var questionario = await _db.Questionarios.Where(u => u.Id == id).SingleOrDefaultAsync();
+            //var questionario = await _db.Questionarios.Where(u => u.Id == id).SingleOrDefaultAsync();
             _db.Questionarios.Remove(questionario);
             await _db.SaveChangesAsync();
             return Ok(questionario);

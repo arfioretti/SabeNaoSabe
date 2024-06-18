@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using SabeNaoSabe.RazorClassLibrary.Services;
 
-namespace SabeNaoSabe.Maui
+namespace SabeNaoSabe.bobo
 {
     public static class MauiProgram
     {
@@ -13,17 +12,13 @@ namespace SabeNaoSabe.Maui
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            builder.Services.AddMauiBlazorWebView();
-            builder.Services.AddSingleton<IQuestionarioService, QuestionarioService>();
-
-
-
 #if DEBUG
-            builder.Services.AddBlazorWebViewDeveloperTools();
-            builder.Logging.AddDebug();
+    		builder.Logging.AddDebug();
 #endif
+            //builder.Services.AddHttpClient("api", httpClient => HttpClient.BaseAddress = new Uri("https://localhost:7256"));
 
             return builder.Build();
         }

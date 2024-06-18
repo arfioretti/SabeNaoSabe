@@ -2,8 +2,6 @@
 @using SabeNaoSabe.RazorClassLibrary.Models
 @using SabeNaoSabe.RazorClassLibrary.Services
 
-@* @inject IQuestionarioService questionarioService
- *@
 <AddButton Visible="@showAddButton" CreateUpdateQuestionarioClicked="QuestionarioCreateUpdate" ></AddButton>
 
 <QuestionarioTable  Visible="@showQuestionarioTable" 
@@ -15,12 +13,17 @@
 <QuestionarioCreateUpdate Visible="@showQuestionarioCreateUpdate" QuestionarioModel="@QuestionarioModel" 
     SaveClicked="SavedClicked" CancelClicked="CanceledClicked" title="@strTitle"/>
 
-@* <Confirm Visible="@showConfirm" DeleteQuestionarioClicked="DeleteQuestionarioConfirm" CancelQuestionarioClicked="CancelQuestionarioConfirm"/>
+<Confirm Visible="@showConfirm" QuestionarioModel="@QuestionarioModel"
+         DeleteQuestionarioClicked="DeleteQuestionarioConfirm" 
+         CancelQuestionarioClicked="CancelQuestionarioConfirm"/>
 
 <QuestionarioDetails BackClicked="CanceledClicked" QuestionarioModel="@QuestionarioModel" Title="@strTitle" Visible="@showQuestionarioDetails" />
- *@
+
 @code {
-    private IQuestionarioService questionarioService = new QuestionarioService();
+    [Inject]
+    public IQuestionarioService questionarioService { get; set; }
+    [Parameter]
+    public string baseUrl { get; set; }
 
     private bool showAddButton = true;
     private bool showQuestionarioTable = true;
@@ -28,17 +31,14 @@
     private bool showQuestionarioCreateUpdate = false;
     private bool showConfirm = false;
     private string strTitle;
+
     private  List<QuestionarioModel> questionariosList = new List<QuestionarioModel>();
     private QuestionarioModel QuestionarioModel = new QuestionarioModel();
 
     protected override async Task OnInitializedAsync()
     {
-        // questionariosList = new List<QuestionarioModel>()
-        // {
-        //     new QuestionarioModel{ Id=1, Name="aaa", Description="bbb", Email="ccc"}
-        // };
+        questionariosList = await questionarioService.GetQuestionarios(baseUrl);
 
-        questionariosList = await questionarioService.GetQuestionarios();
     }
     private void QuestionarioCreateUpdate()
     {
@@ -47,6 +47,9 @@
         showQuestionarioTable = false;
         showQuestionarioCreateUpdate = true;
         showQuestionarioDetails = false;
+        QuestionarioModel.Description = string.Empty;
+        QuestionarioModel.Name = string.Empty;
+        QuestionarioModel.Email = string.Empty;
     }
     private async void SavedClicked()
     {
@@ -57,14 +60,13 @@
         if(QuestionarioModel.Id > 0)
         {
             await questionarioService.EditQuestionario(QuestionarioModel);
-            await OnInitializedAsync();
-            this.StateHasChanged();
         }
         else
         {
             await questionarioService.AddQuestionario(QuestionarioModel);
         }
-
+        await OnInitializedAsync();
+        this.StateHasChanged();
     }
     private async void CanceledClicked()
     {
@@ -77,11 +79,24 @@
     private async void DeleteQuestionario(QuestionarioModel questionarioModel)
     {
         strTitle = "Delete";
-        var quest = await questionarioService.DeleteQuestionario(questionarioModel);
         showAddButton = false;
         showQuestionarioTable = false;
         showQuestionarioCreateUpdate = false;
-        showQuestionarioDetails = true;
+        showQuestionarioDetails = false;
+        showConfirm = true;
+        QuestionarioModel = questionarioModel;
+    }
+    private async void DeleteQuestionarioConfirm(QuestionarioModel questionarioModel)
+    {
+        strTitle = "Delete";
+        var quest = await questionarioService.DeleteQuestionario(questionarioModel);
+        showAddButton = true;
+        showQuestionarioTable = true;
+        showQuestionarioCreateUpdate = false;
+        showQuestionarioDetails = false;
+        showConfirm = false;
+        await OnInitializedAsync();
+        this.StateHasChanged();
     }
     private async void EditQuestionario(QuestionarioModel questionarioModel)
     {
@@ -108,6 +123,17 @@
         showAddButton = true;
         showQuestionarioTable = true;
         showQuestionarioCreateUpdate = false;
+    }
+    private async void CancelQuestionarioConfirm()
+    {
+        showAddButton = true;
+        showQuestionarioTable = true;
+        showQuestionarioCreateUpdate = false;
+        showQuestionarioDetails = false;
+
+        showConfirm = false;
+        await OnInitializedAsync();
+        this.StateHasChanged();
     }
 
 

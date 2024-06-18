@@ -24,9 +24,11 @@ else
                         <td>@q.Id</td>
                         <td>@q.Name</td>
                         <td>@q.Description</td>
-                        <button class="btn btn-primary md-1" @onclick="()=>DetailsQuestionario(q)">Details</button>
-                        <button class="btn btn-primary md-1" @onclick="()=>EditQuestionario(q)">Edit</button>
-                        <button class="btn btn-primary md-1" @onclick="()=>DeleteQuestionario(q)">Delete</button>
+                        <td>
+                            <button class="btn btn-primary" @onclick="()=>DetailsQuestionario(q)">Details</button>
+                            <button class="btn btn-primary" @onclick="()=>EditQuestionario(q)">Edit</button>
+                            <button class="btn btn-primary" @onclick="()=>DeleteQuestionario(q)">Delete</button>
+                        </td>
                     </tr>
                 }
             </tbody>

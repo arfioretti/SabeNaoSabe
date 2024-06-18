@@ -10,10 +10,12 @@ namespace SabeNaoSabe.RazorClassLibrary.Services
 {
     public class QuestionarioService : IQuestionarioService
     {
-        private string _baseUrl = "https://localhost:7256";
-        public async Task<List<QuestionarioModel>> GetQuestionarios()
+        public string _baseUrl = string.Empty;
+
+        public async Task<List<QuestionarioModel>> GetQuestionarios(string baseUrl)
         {
-            var  questionarios = new List<QuestionarioModel>();
+            _baseUrl = baseUrl;
+            var questionarios = new List<QuestionarioModel>();
             using (var client = new HttpClient())
             {
                 string url = $"{_baseUrl}/api/questionario";

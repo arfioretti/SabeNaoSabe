@@ -1,12 +1,19 @@
 ﻿@page "/Questionario"
+@using SabeNaoSabe.RazorClassLibrary.Models;
+
+@inject IQuestionarioService questionarioService;
 
 @using SabeNaoSabe.RazorClassLibrary.Component
 @using SabeNaoSabe.RazorClassLibrary.Services
 
 <h3>Questionario</h3>
 
-<QuestionarioComponent></QuestionarioComponent>
+<QuestionarioComponent baseUrl="@_baseUrl"></QuestionarioComponent>
 
 
 @code {
+    //private string _baseUrl = "https://localhost:7256";
+    private readonly string _baseUrl = DeviceInfo.Platform == DevicePlatform.Android
+                                    ? "http://10.0.2.2:5052"
+                                    : "http://localhost:5052";
 }

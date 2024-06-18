@@ -1,8 +1,16 @@
-﻿@if (Visible)
+﻿@using SabeNaoSabe.RazorClassLibrary.Models
+
+@if (Visible)
 {
     <div class="confirmation-modal">
         <h3>Confirm Deletion</h3>
         <p>Voce tem certeza que deseja deletar?</p>
+        <div class="form-group">
+            <label form="name">Name: @questionarioModel.Name</label>
+        </div>
+        <div class="form-group">
+            <label form="description">Description: @questionarioModel.Description</label>
+        </div>
         <div>
             <button @onclick="DeleteQuestionario">Yes</button>
             <button @onclick="CancelDelete">No</button>
@@ -15,18 +23,20 @@
     [Parameter]
     public bool Visible { get; set; }
     [Parameter]
-    public EventCallback DeleteQuestionarioClicked { get; set; }
+    public QuestionarioModel questionarioModel { get; set; }
+    [Parameter]
+    public EventCallback<QuestionarioModel> DeleteQuestionarioClicked { get; set; }
     [Parameter]
     public EventCallback CancelQuestionarioClicked { get; set; }
 
 
     private async void CancelDelete()
     {
-        await CancelQuestionarioClicked.InvokeAsync(true);
+        await CancelQuestionarioClicked.InvokeAsync();
     }
     private async void DeleteQuestionario()
     {
-        await DeleteQuestionarioClicked.InvokeAsync();
+        await DeleteQuestionarioClicked.InvokeAsync(questionarioModel);
     }
 
 }
