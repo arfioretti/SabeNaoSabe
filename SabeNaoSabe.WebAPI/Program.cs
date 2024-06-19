@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -31,6 +32,19 @@ builder.Services.AddIdentityApiEndpoints<IdentityUser>().
 
 builder.Services.AddScoped<IRoleService, RoleService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "MyPolicy",
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:7084")
+                //.WithMethods("PUT", "DELETE", "GET", "POST");
+                .AllowAnyHeader()
+                .AllowAnyOrigin()
+                .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
 app.MapIdentityApi<IdentityUser>();
 
@@ -43,7 +57,11 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 
+app.UseCors();
+
+
 app.UseAuthorization();
+
 
 app.MapControllers();
 

@@ -9,4 +9,6 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddSingleton<IQuestionarioService, QuestionarioService>();
 
+
+
 await builder.Build().RunAsync();

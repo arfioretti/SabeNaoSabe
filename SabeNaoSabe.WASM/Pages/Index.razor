@@ -3,8 +3,9 @@
 
 <h3>Questionario</h3>
 
-<QuestionarioComponent></QuestionarioComponent>
+<QuestionarioComponent baseUrl="@_baseUrl"></QuestionarioComponent>
 
 
 @code {
+    private readonly string _baseUrl = "http://localhost:5052";
 }
