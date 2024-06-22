@@ -1,6 +1,8 @@
 ﻿@using SabeNaoSabe.RazorClassLibrary.Component
 @using SabeNaoSabe.RazorClassLibrary.Models
 @using SabeNaoSabe.RazorClassLibrary.Services
+@using Newtonsoft.Json
+
 
 <AddButton Visible="@showAddButton" CreateUpdateQuestionarioClicked="QuestionarioCreateUpdate" ></AddButton>
 
@@ -38,7 +40,6 @@
     protected override async Task OnInitializedAsync()
     {
         questionariosList = await questionarioService.GetQuestionarios(baseUrl);
-
     }
     private void QuestionarioCreateUpdate()
     {
@@ -50,6 +51,7 @@
         QuestionarioModel.Description = string.Empty;
         QuestionarioModel.Name = string.Empty;
         QuestionarioModel.Email = string.Empty;
+        QuestionarioModel.Corpo = string.Empty;
     }
     private async void SavedClicked()
     {
@@ -108,15 +110,74 @@
         QuestionarioModel.Name = questionarioModel.Name;
         QuestionarioModel.Description = questionarioModel.Description;
         QuestionarioModel.Email = questionarioModel.Email;
+        QuestionarioModel.Corpo = questionarioModel.Corpo;
     }
     private async void DetailsQuestionario(QuestionarioModel questionarioModel)
     {
-        strTitle = "Edit";
-        var quest = await questionarioService.EditQuestionario(questionarioModel);
+        strTitle = "Details";
+        var quest = await questionarioService.GetQuestionarioById(questionarioModel.Id);
         showAddButton = false;
         showQuestionarioTable = false;
-        showQuestionarioCreateUpdate = true;
+        showQuestionarioCreateUpdate = false;
+        showQuestionarioDetails = true;
 
+        string linesCorpo = questionarioModel.Corpo;
+
+        string[] lines = linesCorpo.Split('\n');
+
+        List<Corpo> corpoList = new List<Corpo>();
+        Corpo corpo = new Corpo();
+        corpo.Opcoes = new List<Opcao>();
+        int token = 0;
+        int tokenAnterior = 0;
+
+        foreach (var line in lines)
+        {
+            token = 0;
+            switch (line)
+            {
+                case "[PU]":
+                    token = 1;
+                    tokenAnterior = token;
+                    break;
+                case "[OP]":
+                    token = 2;
+                    tokenAnterior = token;
+                    break;
+                case "[R]":
+                    token = 3;
+                    tokenAnterior = token;
+                    break;
+                case "[E]":
+                    token = 4;
+                    tokenAnterior = token;
+                    break;
+            }
+            if(token == 0)
+            {
+                switch (tokenAnterior)
+                {
+                    case 1:
+                        corpo.Pergunta = line;
+                        break;
+                    case 2:
+                        Opcao opcao = new Opcao();
+                        opcao.Descricao = line;
+                        corpo.Opcoes.Add(opcao);
+                        break;
+                    case 3:
+                        corpo.Resposta = line;
+                        break;
+                    case 4:
+                        corpo.Explicacao = line;
+                        Corpo corpox = new Corpo();
+                        corpox = corpo;
+                        corpoList.Add(corpox);
+                        break;
+                }
+            }
+        }
+        this.StateHasChanged();
     }
     private async void BackClicked()
     {

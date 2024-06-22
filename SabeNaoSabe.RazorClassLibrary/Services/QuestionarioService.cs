@@ -28,6 +28,22 @@ namespace SabeNaoSabe.RazorClassLibrary.Services
             }
             return questionarios;
         }
+        public async Task<QuestionarioModel> GetQuestionarioById(int id)
+        {
+            QuestionarioModel questionario = new QuestionarioModel();
+            using (var client = new HttpClient())
+            {
+                string url = $"{_baseUrl}/api/questionario/" + id.ToString();
+                var apiresponse = await client.GetAsync(url);
+                if (apiresponse.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var response = await apiresponse.Content.ReadAsStringAsync();
+                    questionario = JsonConvert.DeserializeObject<QuestionarioModel>(response.ToString());
+                }
+            }
+            return questionario;
+        }
+
 
         public async Task<bool> EditQuestionario(QuestionarioModel questionarioModel)
         {
