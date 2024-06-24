@@ -19,7 +19,7 @@
          DeleteQuestionarioClicked="DeleteQuestionarioConfirm" 
          CancelQuestionarioClicked="CancelQuestionarioConfirm"/>
 
-<QuestionarioDetails BackClicked="CanceledClicked" QuestionarioModel="@QuestionarioModel" Title="@strTitle" Visible="@showQuestionarioDetails" />
+<QuestionarioDetails corpoList="@corpoList" BackClicked="CanceledClicked" QuestionarioModel="@QuestionarioModel" Title="@strTitle" Visible="@showQuestionarioDetails" />
 
 @code {
     [Inject]
@@ -36,6 +36,8 @@
 
     private  List<QuestionarioModel> questionariosList = new List<QuestionarioModel>();
     private QuestionarioModel QuestionarioModel = new QuestionarioModel();
+    private List<Corpo> corpoList = new List<Corpo>();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -115,67 +117,73 @@
     private async void DetailsQuestionario(QuestionarioModel questionarioModel)
     {
         strTitle = "Details";
-        var quest = await questionarioService.GetQuestionarioById(questionarioModel.Id);
         showAddButton = false;
         showQuestionarioTable = false;
         showQuestionarioCreateUpdate = false;
         showQuestionarioDetails = true;
-
+        QuestionarioModel = questionarioModel;
         string linesCorpo = questionarioModel.Corpo;
-
         string[] lines = linesCorpo.Split('\n');
-
-        List<Corpo> corpoList = new List<Corpo>();
-        Corpo corpo = new Corpo();
-        corpo.Opcoes = new List<Opcao>();
+        Corpo corpo = null;
         int token = 0;
-        int tokenAnterior = 0;
-
         foreach (var line in lines)
         {
-            token = 0;
             switch (line)
             {
                 case "[PU]":
                     token = 1;
-                    tokenAnterior = token;
                     break;
                 case "[OP]":
                     token = 2;
-                    tokenAnterior = token;
                     break;
                 case "[R]":
                     token = 3;
-                    tokenAnterior = token;
                     break;
                 case "[E]":
                     token = 4;
-                    tokenAnterior = token;
+                    break;
+                case "[PM]":
+                    token = 5;
+                    break;
+                default:
+                    switch (token)
+                    {
+                        case 1:
+                        case 5:
+                            if(corpo != null)
+                            {
+                                corpoList.Add(corpo);
+                            }
+                            corpo = new Corpo();
+                            corpo.Opcoes = new List<Opcao>();
+                            if (token == 1)
+                            {
+                                corpo.Tipo = 1;
+                            }
+                            else
+                            {
+                                corpo.Tipo = 2;
+                            }
+                            corpo.Pergunta = line;
+                            break;
+                        case 2:
+                            Opcao opcao = new Opcao();
+                            opcao.Descricao = line;
+                            corpo.Opcoes.Add(opcao);
+                            break;
+                        case 3:
+                            corpo.Resposta = line;
+                            break;
+                        case 4:
+                            corpo.Explicacao = line;
+                            break;
+                    }
                     break;
             }
-            if(token == 0)
-            {
-                switch (tokenAnterior)
-                {
-                    case 1:
-                        corpo.Pergunta = line;
-                        break;
-                    case 2:
-                        Opcao opcao = new Opcao();
-                        opcao.Descricao = line;
-                        corpo.Opcoes.Add(opcao);
-                        break;
-                    case 3:
-                        corpo.Resposta = line;
-                        break;
-                    case 4:
-                        corpo.Explicacao = line;
-                        Corpo corpox = new Corpo();
-                        corpox = corpo;
-                        corpoList.Add(corpox);
-                        break;
-                }
-            }
+        }
+        if(corpo != null)
+        {
+            corpoList.Add(corpo);
         }
         this.StateHasChanged();
     }

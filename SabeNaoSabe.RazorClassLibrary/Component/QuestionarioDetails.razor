@@ -10,6 +10,34 @@
         <label>Description</label>
         <p>@QuestionarioModel.Description</p>
     </div>
+        <EditForm Model="corpoList" OnValidSubmit="RespostaQuestionario">
+        @foreach (var corpo in corpoList)
+        {
+            <p>@corpo.Pergunta</p>
+            @foreach (var opcao in corpo.Opcoes)
+            {
+                @if(corpo.Tipo == 1)
+                {
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2">@opcao.Descricao
+                        <label class="form-check-label" for="radio2"></label>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="check2" name="option2" value="something">
+                        <label class="form-check-label" for="check2">@opcao.Descricao</label>
+                    </div>
+                }
+            }
+@*             <p>@corpo.Resposta</p>
+            <p>@corpo.Explicacao</p>
+ *@        }
+    </EditForm>
+
+    <button type="submit" class="btn btn-primary m-md-1">Save</button>
+    <button class="btn btn-primary m-md-1" @onclick="CancelQuestionario">Cancel</button>
     <button class="btn btn-primary m-md-1" @onclick="BackQuestionario">Back</button>
 }
 @code {
@@ -20,7 +48,27 @@
     [Parameter]
     public EventCallback BackClicked { get; set; }
     [Parameter]
-    public QuestionarioModel QuestionarioModel { get; set; } = new QuestionarioModel();
+    public QuestionarioModel QuestionarioModel { get; set; } 
+    [Parameter]
+    public List<Corpo> corpoList { get; set; }
+    [Parameter]
+    public EventCallback SaveClicked { get; set; }
+    [Parameter]
+    public EventCallback CancelClicked { get; set; }
+
+
+    private async Task RespostaQuestionario1()
+    {
+        if (Title == "Create") QuestionarioModel.Id = 0;
+        await SaveClicked.InvokeAsync(QuestionarioModel);
+    }
+    private async Task CancelQuestionario()
+    {
+        QuestionarioModel.Name = null;
+        QuestionarioModel.Description = null;
+
+        await CancelClicked.InvokeAsync(QuestionarioModel);
+    }
 
     private void BackQuestionario()
     {

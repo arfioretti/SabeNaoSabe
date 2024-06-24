@@ -8,6 +8,7 @@ namespace SabeNaoSabe.RazorClassLibrary.Models
 {
     public class Corpo
     {
+        public int Tipo { get; set; }
         public string Pergunta { get; set; }
         public List<Opcao> Opcoes { get; set; }
         public string Resposta { get; set; }
