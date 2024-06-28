@@ -1,44 +1,60 @@
-﻿@using SabeNaoSabe.RazorClassLibrary.Models
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using SabeNaoSabe.RazorClassLibrary.Models
 
 @if (Visible)
 {
     <div>
-        <label >Name</label>
-        <p>@QuestionarioModel.Name</p>
+        <label><b>Name:</b> @QuestionarioModel.Name</label>
     </div>
     <div>
-        <label>Description</label>
-        <p>@QuestionarioModel.Description</p>
+        <label><b>Description:</b> @QuestionarioModel.Description</label>
     </div>
-        <EditForm Model="corpoList" OnValidSubmit="RespostaQuestionario">
+    <EditForm Model="corpoList" OnSubmit="RespostaQuestionario"> 
+        
+@*         <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary />
+ *@        
         @foreach (var corpo in corpoList)
         {
-            <p>@corpo.Pergunta</p>
-            @foreach (var opcao in corpo.Opcoes)
+            <label><b>Pergunta @corpo.Id:</b>@corpo.Pergunta</label>
+            <br />
+            @if (corpo.Tipo == 1)
             {
-                @if(corpo.Tipo == 1)
+                // opcao radio, não funcionou o inputradiogroup, apelei.
+                @foreach(var opcao in corpo.Opcoes)
                 {
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2">@opcao.Descricao
-                        <label class="form-check-label" for="radio2"></label>
-                    </div>
+                    <input type="radio" Value="@opcao.Checked" name="@corpo.Id.ToString()" id="@opcao.Id" @onchange="@(()=>corpo.Resposta=opcao.Id)"/>
+                    <label for="@opcao.Id">@opcao.Descricao</label>
+                    <br />
                 }
-                else
+                @if (exp)
                 {
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="check2" name="option2" value="something">
-                        <label class="form-check-label" for="check2">@opcao.Descricao</label>
-                    </div>
+                    <br />
+                    <p><b>Resultado:</b> @corpo.Resultado</p>
+                    <p><b>Explicação:</b> @corpo.Explicacao</p>
                 }
             }
-@*             <p>@corpo.Resposta</p>
-            <p>@corpo.Explicacao</p>
- *@        }
+            else
+            {
+                // ocpcao checkbox
+                @foreach (var opcao in corpo.Opcoes)
+                {
+                    <InputCheckbox id="opcaoCheck" @bind-Value="opcao.Checked" class="form-control-input" />
+                    <span style="padding-left: 5px">@opcao.Descricao</span>
+                    <br />
+                }
+                @if (exp)
+                {
+                    <br />
+                    <p><b>Resultado:</b> @corpo.Resultado</p>
+                    <p><b>Explicação:</b> @corpo.Explicacao</p>
+                }
+            }
+        }
+        <button type="submit" class="btn btn-primary m-md-1">Corrige</button>
+        <button class="btn btn-primary m-md-1" @onclick="CancelQuestionario">Cancel</button>
+        <button class="btn btn-primary m-md-1" @onclick="BackQuestionario">Back</button>
     </EditForm>
-
-    <button type="submit" class="btn btn-primary m-md-1">Save</button>
-    <button class="btn btn-primary m-md-1" @onclick="CancelQuestionario">Cancel</button>
-    <button class="btn btn-primary m-md-1" @onclick="BackQuestionario">Back</button>
 }
 @code {
     [Parameter]
@@ -55,12 +71,50 @@
     public EventCallback SaveClicked { get; set; }
     [Parameter]
     public EventCallback CancelClicked { get; set; }
+    public bool exp = false;
 
-
-    private async Task RespostaQuestionario1()
+    private async Task RespostaQuestionario()
     {
-        if (Title == "Create") QuestionarioModel.Id = 0;
-        await SaveClicked.InvokeAsync(QuestionarioModel);
+        foreach(var corpo in corpoList)
+        {
+            if(corpo.Tipo == 1)
+            {
+                int gabarito = corpo.Gabaritos[0];
+                if(corpo.Resposta == gabarito)
+                {
+                    corpo.Resultado = "Acertou";
+                }
+                else
+                {
+                    corpo.Resultado = "Errou";
+                }
+            }
+            else
+            {
+                int total = 0;
+                foreach(var gabarito in corpo.Gabaritos)
+                {
+                    foreach(var opcao in corpo.Opcoes)
+                    {
+                        if (opcao.Id == gabarito && opcao.Checked) total++;
+                    }
+                }
+                if (total == corpo.Gabaritos.Count)
+                {
+                    corpo.Resultado = "Acertou";
+                }
+                else
+                {
+                    corpo.Resultado = "Errou";
+                }
+            }
+        }
+
+        exp = true;
+        this.StateHasChanged();
+
+        // if (Title == "Create") QuestionarioModel.Id = 0;
+        // await SaveClicked.InvokeAsync(QuestionarioModel);
     }
     private async Task CancelQuestionario()
     {

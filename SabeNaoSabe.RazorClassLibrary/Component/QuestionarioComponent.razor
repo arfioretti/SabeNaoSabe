@@ -126,6 +126,8 @@
         string[] lines = linesCorpo.Split('\n');
         Corpo corpo = null;
         int token = 0;
+        int IdPergunta = 0;
+        int IdOpcao = 0;
         foreach (var line in lines)
         {
             switch (line)
@@ -156,6 +158,8 @@
                             }
                             corpo = new Corpo();
                             corpo.Opcoes = new List<Opcao>();
+                            corpo.Gabaritos = new List<int>();
+                            IdOpcao = 0;
                             if (token == 1)
                             {
                                 corpo.Tipo = 1;
@@ -164,15 +168,21 @@
                             {
                                 corpo.Tipo = 2;
                             }
+                            IdPergunta++;
+                            corpo.Id = IdPergunta;
                             corpo.Pergunta = line;
                             break;
                         case 2:
                             Opcao opcao = new Opcao();
+                            IdOpcao++;
+                            opcao.Id = IdOpcao;
                             opcao.Descricao = line;
                             corpo.Opcoes.Add(opcao);
                             break;
                         case 3:
-                            corpo.Resposta = line;
+                            int i = Int32.Parse(line);
+                            corpo.Gabaritos.Add(i);
+                            corpo.Resposta = 0;
                             break;
                         case 4:
                             corpo.Explicacao = line;
