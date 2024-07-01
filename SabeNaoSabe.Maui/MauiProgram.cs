@@ -18,7 +18,7 @@ namespace SabeNaoSabe.Maui
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddSingleton<IQuestionarioService, QuestionarioService>();
 
-
+            builder.Services.AddBlazorBootstrap();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();

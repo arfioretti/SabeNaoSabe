@@ -36,7 +36,7 @@
 
     private  List<QuestionarioModel> questionariosList = new List<QuestionarioModel>();
     private QuestionarioModel QuestionarioModel = new QuestionarioModel();
-    private List<Corpo> corpoList = new List<Corpo>();
+    private List<Corpo> corpoList;
 
 
     protected override async Task OnInitializedAsync()
@@ -116,7 +116,7 @@
     }
     private async void DetailsQuestionario(QuestionarioModel questionarioModel)
     {
-        strTitle = "Details";
+        strTitle = "Responder";
         showAddButton = false;
         showQuestionarioTable = false;
         showQuestionarioCreateUpdate = false;
@@ -124,6 +124,7 @@
         QuestionarioModel = questionarioModel;
         string linesCorpo = questionarioModel.Corpo;
         string[] lines = linesCorpo.Split('\n');
+        corpoList = new List<Corpo>();
         Corpo corpo = null;
         int token = 0;
         int IdPergunta = 0;
