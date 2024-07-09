@@ -37,26 +37,31 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "MyPolicy",
         policy =>
         {
-            policy.WithOrigins("https://localhost:7084")
+            //policy.WithOrigins("https://localhost:7084")
+            policy.WithOrigins("https://sabenaosabewasm20240704115206.azurewebsites.net")
                 //.WithMethods("PUT", "DELETE", "GET", "POST");
                 .AllowAnyHeader()
                 .AllowAnyOrigin()
                 .AllowAnyMethod();
         });
+
 });
 
 var app = builder.Build();
 app.MapIdentityApi<IdentityUser>();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 #if !DEBUG
-app.UseHttpsRedirection();
+    app.UseHttpsRedirection();
 #endif
 
 app.UseCors();

@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "",
+      "secretStore": "AzureAppSettings",
+      "resourceId": null,
+      "type": "mssql.onprem",
+      "connectionId": "ConnectionStrings:questionariocs"
+    },
+    "apis1": {
+      "apiEndpoint": "https://sabenaosabewebapiapi.azure-api.net/api/questionario",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/SabeNaoSabeWebAPIapi/apis/SabeNaoSabeWebAPI",
+      "type": "apis.azure"
+    }
+  }
+}
