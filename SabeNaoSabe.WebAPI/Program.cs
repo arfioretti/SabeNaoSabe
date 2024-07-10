@@ -32,20 +32,35 @@ builder.Services.AddIdentityApiEndpoints<IdentityUser>().
 
 builder.Services.AddScoped<IRoleService, RoleService>();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: "MyPolicy",
-        policy =>
-        {
-            //policy.WithOrigins("https://localhost:7084")
-            policy.WithOrigins("https://sabenaosabewasm20240704115206.azurewebsites.net")
-                //.WithMethods("PUT", "DELETE", "GET", "POST");
-                .AllowAnyHeader()
-                .AllowAnyOrigin()
-                .AllowAnyMethod();
-        });
+#if !DEBUG
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: "MyPolicy",
+            policy =>
+            {
+                policy.WithOrigins("https://sabenaosabewasm20240704115206.azurewebsites.net")
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod();
+            });
 
-});
+    });
+#else
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: "MyPolicy",
+            policy =>
+            {
+                policy.WithOrigins("https://localhost:7084")
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod();
+            });
+
+    });
+#endif
+
+
 
 var app = builder.Build();
 app.MapIdentityApi<IdentityUser>();
