@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿    using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SabeNaoSabe.WebAPI.Data;
 using SabeNaoSabe.WebAPI.Model;
+using SabeNaoSabe.WebAPI.Models;
 
 
 namespace SabeNaoSabe.WebAPI.Controllers;
@@ -35,6 +36,17 @@ public class QuestionarioController : ControllerBase
         await _db.Questionarios.AddAsync(questionario);
         await _db.SaveChangesAsync();
         return Ok(questionario);
+    }
+    [HttpPost]
+    [Route("UploadedFile")]
+    public async Task<ActionResult> PostUploadedFile([FromBody] UploadedFile uploadedFile)
+    {
+        var path = $"{Environment.CurrentDirectory}\\Uploaded\\{uploadedFile.FileName}";
+        var fs = System.IO.File.Create(path);
+        fs.Write(uploadedFile.FileContent, 0, uploadedFile.FileContent.Length);
+        fs.Close(); 
+        
+        return Ok();
     }
     [HttpPut]
     public async Task<ActionResult> PutQuestionario(QuestionarioModel questionario)

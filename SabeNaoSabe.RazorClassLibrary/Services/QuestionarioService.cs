@@ -138,5 +138,26 @@ namespace SabeNaoSabe.RazorClassLibrary.Services
             }
             return ret;
         }
+
+        public async Task<bool> AddUploadedFile(UploadedFile uploadedFile)
+        {
+            var ret = false;
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string url = $"{_baseUrl}/api/Questionario/UploadedFile";
+                    var serializeContent = JsonConvert.SerializeObject(uploadedFile);
+
+                    var apiresponse = await client.PostAsync(url, new StringContent(serializeContent, encoding: Encoding.UTF8, "application/json"));
+                }
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+            }
+            return ret;
+        }
     }
 }

@@ -7,10 +7,10 @@
 
 
 @code {
-    private readonly string _baseUrl = "http://localhost:5052";
-
+    int i = 0;
     #if !DEBUG
-        _baseUrl = "https://sabenaosabewebapi20240708194323.azurewebsites.net";
+        private readonly string _baseUrl = "https://sabenaosabewebapi20240708194323.azurewebsites.net";
+    #else
+        private readonly string _baseUrl = "http://localhost:5052";
     #endif
-
 }

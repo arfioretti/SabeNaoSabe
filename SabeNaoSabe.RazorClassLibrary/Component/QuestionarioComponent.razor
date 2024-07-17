@@ -2,6 +2,9 @@
 @using SabeNaoSabe.RazorClassLibrary.Models
 @using SabeNaoSabe.RazorClassLibrary.Services
 @using Newtonsoft.Json
+@using System.Net.Http.Json
+
+@using Microsoft.AspNetCore.Components.Forms
 
 
 <AddButton Visible="@showAddButton" CreateUpdateQuestionarioClicked="QuestionarioCreateUpdate" ></AddButton>
@@ -12,20 +15,30 @@
                     EditClicked="EditQuestionario"
                     DeleteClicked="DeleteQuestionario" />
 
-<QuestionarioCreateUpdate Visible="@showQuestionarioCreateUpdate" QuestionarioModel="@QuestionarioModel" 
-    SaveClicked="SavedClicked" CancelClicked="CanceledClicked" title="@strTitle"/>
+<QuestionarioCreateUpdate Visible="@showQuestionarioCreateUpdate" 
+                          selectedFiles="@selectedFiles"
+                          QuestionarioModel="@QuestionarioModel" 
+                          SaveClicked="SavedClicked" 
+                          CancelClicked="CanceledClicked" 
+                          title="@strTitle"/>
 
 <Confirm Visible="@showConfirm" QuestionarioModel="@QuestionarioModel"
          DeleteQuestionarioClicked="DeleteQuestionarioConfirm" 
          CancelQuestionarioClicked="CancelQuestionarioConfirm"/>
 
-<QuestionarioDetails corpoList="@corpoList" BackClicked="CanceledClicked" QuestionarioModel="@QuestionarioModel" Title="@strTitle" Visible="@showQuestionarioDetails" />
+<QuestionarioDetails corpoList="@corpoList" 
+                     BackClicked="CanceledClicked" 
+                     QuestionarioModel="@QuestionarioModel" 
+                     Title="@strTitle" 
+                     Visible="@showQuestionarioDetails" />
 
 @code {
     [Inject]
     public IQuestionarioService questionarioService { get; set; }
     [Parameter]
     public string baseUrl { get; set; }
+    [Parameter]
+    public IReadOnlyList<IBrowserFile> selectedFiles { get; set; }
 
     private bool showAddButton = true;
     private bool showQuestionarioTable = true;
@@ -55,11 +68,29 @@
         QuestionarioModel.Email = string.Empty;
         QuestionarioModel.Corpo = string.Empty;
     }
-    private async void SavedClicked()
+    private async void SavedClicked(IReadOnlyList<IBrowserFile>? selectedFiles)
     {
         showAddButton = true;
         showQuestionarioTable = true;
         showQuestionarioCreateUpdate = false;
+        if(selectedFiles != null)
+        {
+            foreach (var file in selectedFiles)
+            {
+                Stream stream = file.OpenReadStream();
+                MemoryStream ms = new MemoryStream();
+                stream.CopyToAsync(ms);
+                stream.Close();
+
+                UploadedFile uploadedFile = new UploadedFile();
+                uploadedFile.FileName = file.Name;
+                uploadedFile.FileContent = ms.ToArray();
+                // uploadedFile.Id = "p" + BlogId + "";
+                ms.Close();
+
+                await questionarioService.AddUploadedFile(uploadedFile);
+            }
+        }
 
         if(QuestionarioModel.Id > 0)
         {
@@ -215,6 +246,4 @@
         await OnInitializedAsync();
         this.StateHasChanged();
     }
-
-
 }
