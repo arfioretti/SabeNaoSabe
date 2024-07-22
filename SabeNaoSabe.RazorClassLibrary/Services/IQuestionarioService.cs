@@ -7,6 +7,8 @@ namespace SabeNaoSabe.RazorClassLibrary.Services
     {
         Task<List<QuestionarioModel>> GetQuestionarios(string baseUrl);
         Task<QuestionarioModel> GetQuestionarioById(int id);
+        Task<List<UploadedFile>> GetUploadedFile();
+
         Task<bool> AddQuestionario(QuestionarioModel questionarioModel);
         Task<bool> AddUploadedFile(UploadedFile uploadedFile);
         Task<bool> EditQuestionario(QuestionarioModel questionarioModel);

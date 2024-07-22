@@ -5,6 +5,7 @@ using System.Text.Unicode;
 using System.Text;
 using System.Net.Http.Json;
 using System.Net.Http;
+using System.Collections.Generic;
 
 namespace SabeNaoSabe.RazorClassLibrary.Services
 {
@@ -43,8 +44,6 @@ namespace SabeNaoSabe.RazorClassLibrary.Services
             }
             return questionario;
         }
-
-
         public async Task<bool> EditQuestionario(QuestionarioModel questionarioModel)
         {
             var ret = false;
@@ -158,6 +157,25 @@ namespace SabeNaoSabe.RazorClassLibrary.Services
                 string msg = ex.Message;
             }
             return ret;
+        }
+
+        public async Task<List<UploadedFile>> GetUploadedFile()
+        {
+            List<UploadedFile> uploadedFiles = new List<UploadedFile>();    
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string url = $"{_baseUrl}/api/Questionario/GetUploadedFile";
+                    var apiresponse = await client.GetAsync(url);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+            }
+            return uploadedFiles;
         }
     }
 }

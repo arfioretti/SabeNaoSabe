@@ -16,7 +16,6 @@
                     DeleteClicked="DeleteQuestionario" />
 
 <QuestionarioCreateUpdate Visible="@showQuestionarioCreateUpdate" 
-                          selectedFiles="@selectedFiles"
                           QuestionarioModel="@QuestionarioModel" 
                           SaveClicked="SavedClicked" 
                           CancelClicked="CanceledClicked" 
@@ -38,7 +37,7 @@
     [Parameter]
     public string baseUrl { get; set; }
     [Parameter]
-    public IReadOnlyList<IBrowserFile> selectedFiles { get; set; }
+    public List<UploadedFile> UploadedFiles { get; set; }
 
     private bool showAddButton = true;
     private bool showQuestionarioTable = true;
@@ -55,6 +54,7 @@
     protected override async Task OnInitializedAsync()
     {
         questionariosList = await questionarioService.GetQuestionarios(baseUrl);
+        UploadedFiles = await questionarioService.GetUploadedFile();
     }
     private void QuestionarioCreateUpdate()
     {
@@ -68,27 +68,23 @@
         QuestionarioModel.Email = string.Empty;
         QuestionarioModel.Corpo = string.Empty;
     }
-    private async void SavedClicked(IReadOnlyList<IBrowserFile>? selectedFiles)
+    private async void SavedClicked(List<UploadedFile>? uploadedFiles)
     {
         showAddButton = true;
         showQuestionarioTable = true;
         showQuestionarioCreateUpdate = false;
-        if(selectedFiles != null)
+        if (uploadedFiles != null)
         {
-            foreach (var file in selectedFiles)
+            foreach (var uploadedFile in uploadedFiles)
             {
-                Stream stream = file.OpenReadStream();
-                MemoryStream ms = new MemoryStream();
-                stream.CopyToAsync(ms);
-                stream.Close();
-
-                UploadedFile uploadedFile = new UploadedFile();
-                uploadedFile.FileName = file.Name;
-                uploadedFile.FileContent = ms.ToArray();
-                // uploadedFile.Id = "p" + BlogId + "";
-                ms.Close();
-
-                await questionarioService.AddUploadedFile(uploadedFile);
+                try
+                {
+                    await questionarioService.AddUploadedFile(uploadedFile);
+                }
+                catch (Exception e)
+                {
+                    string m = e.Message;
+                }
             }
         }
 
@@ -109,7 +105,6 @@
         showQuestionarioTable = true;
         showQuestionarioCreateUpdate = false;
         showQuestionarioDetails = false;
-
     }
     private async void DeleteQuestionario(QuestionarioModel questionarioModel)
     {
@@ -179,6 +174,9 @@
                 case "[PM]":
                     token = 5;
                     break;
+                case "[I]":
+                    token = 6;
+                    break;
                 default:
                     switch (token)
                     {
@@ -219,8 +217,11 @@
                         case 4:
                             corpo.Explicacao = line;
                             break;
+                        case 6:
+                            corpo.ImagemSecundaria = line;
+                            break;
                     }
-                    break;
+                 break;
             }
         }
         if(corpo != null)

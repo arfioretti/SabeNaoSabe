@@ -10,10 +10,6 @@
         <label><b>Description:</b> @QuestionarioModel.Description</label>
     </div>
     <EditForm Model="corpoList" OnSubmit="RespostaQuestionario"> 
-        
-@*         <DataAnnotationsValidator></DataAnnotationsValidator>
-        <ValidationSummary />
- *@        
         @foreach (var corpo in corpoList)
         {
             <label><b>Pergunta @corpo.Id:</b>@corpo.Pergunta</label>
@@ -112,9 +108,6 @@
 
         exp = true;
         this.StateHasChanged();
-
-        // if (Title == "Create") QuestionarioModel.Id = 0;
-        // await SaveClicked.InvokeAsync(QuestionarioModel);
     }
     private async Task CancelQuestionario()
     {

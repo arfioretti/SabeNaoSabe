@@ -25,17 +25,23 @@
             <ValidationMessage For="@(()=>QuestionarioModel.Email)"></ValidationMessage>
         </div>
         <div class="form-group">
+            <label form="imagemprincipal">Imagem Principal</label>
+            <InputText id="imagemprincipal" @bind-Value="QuestionarioModel.ImagemPrincipal" class="form-control"></InputText>
+            <ValidationMessage For="@(()=>QuestionarioModel.ImagemPrincipal)"></ValidationMessage>
+        </div>
+        <div class="form-group">
             <label form="corpo">Corpo</label>
             <InputTextArea id="corpo" @bind-Value="QuestionarioModel.Corpo" class="form-control"></InputTextArea>
             <ValidationMessage For="@(()=>QuestionarioModel.Corpo)"></ValidationMessage>
         </div>
-        <InputFile OnChange="OnInputFileChange" multiple />
+
+       <InputFile OnChange="OnInputFileChange" multiple />
+
         <p>@Message</p>
         <button type="submit" class="btn btn-primary m-md-1">Save</button>
         <button class="btn btn-primary m-md-1" @onclick="CancelQuestionario">Cancel</button>
     </EditForm>
 }
-
 
 @code {
     [Parameter]
@@ -45,25 +51,49 @@
     [Parameter]
     public QuestionarioModel QuestionarioModel { get; set; } = new QuestionarioModel();
     [Parameter]
-    public EventCallback<IReadOnlyList<IBrowserFile>> SaveClicked { get; set; }
+    public EventCallback<List<UploadedFile>> SaveClicked { get; set; }
     [Parameter]
     public EventCallback CancelClicked { get; set; }
-    [Parameter]
+
     public IReadOnlyList<IBrowserFile> selectedFiles { get; set; }
 
     String baseUrl = "http://localhost:5052/api/questionarios";
     public string Message;
 
+    public List<UploadedFile> uploadedFiles = new List<UploadedFile>();
+
     private void OnInputFileChange(InputFileChangeEventArgs e)
     {
         selectedFiles = e.GetMultipleFiles();
-        // this.StateHasChanged();
     }
-
     private async Task CreateUpdateQuestionario1()
     {
+        int i = 0;
+        foreach (var file in selectedFiles)
+        {
+            try
+            {
+                Stream stream = file.OpenReadStream();
+                MemoryStream ms = new MemoryStream();
+                await stream.CopyToAsync(ms);
+                stream.Close();
+
+                UploadedFile uploadedFile = new UploadedFile();
+                uploadedFile.FileName = file.Name;
+                uploadedFile.FileContent = ms.ToArray();
+                i++;
+                uploadedFile.Id = i.ToString();
+                ms.Close();
+
+                uploadedFiles.Add(uploadedFile);
+            }
+            catch (Exception e)
+            {
+                string m = e.Message;
+            }
+        }
         if (Title == "Create") QuestionarioModel.Id = 0;
-        await SaveClicked.InvokeAsync(selectedFiles);
+        await SaveClicked.InvokeAsync(uploadedFiles);
     }
     private async Task CancelQuestionario()
     {
@@ -72,32 +102,4 @@
 
         await CancelClicked.InvokeAsync(QuestionarioModel);
     }
-    private async void OnUploadFiles()
-    {
-        // string url = baseUrl + EndPoint;
-        // if (EndPoint.StartsWith("http"))
-        //     url = EndPoint;
-
-        foreach (var file in selectedFiles)
-        {
-            Stream stream = file.OpenReadStream();
-            MemoryStream ms = new MemoryStream();
-            await stream.CopyToAsync(ms);
-            stream.Close();
-
-            // UploadedFile uploadedFile = new UploadedFile();
-            // uploadedFile.FileName = file.Name;
-            // uploadedFile.FileContent = ms.ToArray();
-            // // uploadedFile.Id = "p" + BlogId + "";
-            // ms.Close();
-
-            // await Http.PostAsJsonAsync<UploadedFile>(url, uploadedFile);
-
-            var client = new HttpClient();
-            await client.PostAsJsonAsync<QuestionarioModel>(baseUrl, QuestionarioModel);
-        }
-        Message = $"{selectedFiles.Count} file(s) uploaded on server";
-        // this.StateHasChanged();
-    }
-
 }

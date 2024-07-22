@@ -30,6 +30,15 @@ public class QuestionarioController : ControllerBase
     {
         return await _db.Questionarios.Where(u=>u.Id == id).SingleOrDefaultAsync();
     }
+    [HttpGet]
+    [Route("GetUploadedFile")]
+    public async Task<IEnumerable<UploadedFile>> GetUploadedFile()
+    {
+        List<UploadedFile> uploadedFiles = new List<UploadedFile>();
+
+        return uploadedFiles;
+    }
+
     [HttpPost]
     public async Task<ActionResult> PostQuestionario([FromBody]QuestionarioModel questionario) 
     {

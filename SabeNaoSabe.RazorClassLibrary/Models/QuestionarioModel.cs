@@ -7,5 +7,6 @@
         public string Description { get; set; }
         public string Email { get; set; }
         public string Corpo { get; set; }
+        public string ImagemPrincipal { get; set; }
     }
 }
