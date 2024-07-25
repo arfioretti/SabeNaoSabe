@@ -27,7 +27,8 @@
 
 <QuestionarioDetails corpoList="@corpoList" 
                      BackClicked="CanceledClicked" 
-                     QuestionarioModel="@QuestionarioModel" 
+                     QuestionarioModel="@QuestionarioModel"
+                     imageSource="@imageSource"
                      Title="@strTitle" 
                      Visible="@showQuestionarioDetails" />
 
@@ -38,6 +39,9 @@
     public string baseUrl { get; set; }
     [Parameter]
     public List<UploadedFile> UploadedFiles { get; set; }
+    [Parameter]
+    public string? imageSource { get; set; }
+
 
     private bool showAddButton = true;
     private bool showQuestionarioTable = true;
@@ -50,11 +54,14 @@
     private QuestionarioModel QuestionarioModel = new QuestionarioModel();
     private List<Corpo> corpoList;
 
+    private UploadedFile uploadedFile = new UploadedFile();
+
+
 
     protected override async Task OnInitializedAsync()
     {
         questionariosList = await questionarioService.GetQuestionarios(baseUrl);
-        UploadedFiles = await questionarioService.GetUploadedFile();
+        // UploadedFiles = await questionarioService.GetUploadedFile();
     }
     private void QuestionarioCreateUpdate()
     {
@@ -142,7 +149,11 @@
     }
     private async void DetailsQuestionario(QuestionarioModel questionarioModel)
     {
+
         strTitle = "Responder";
+
+        imageSource = "https://localhost:7256/api/Questionario/GetUploadedFile?name=";
+
         showAddButton = false;
         showQuestionarioTable = false;
         showQuestionarioCreateUpdate = false;

@@ -159,23 +159,30 @@ namespace SabeNaoSabe.RazorClassLibrary.Services
             return ret;
         }
 
-        public async Task<List<UploadedFile>> GetUploadedFile()
+        public async Task<UploadedFile> GetUploadedFile(string name)
         {
-            List<UploadedFile> uploadedFiles = new List<UploadedFile>();    
+            UploadedFile uploadedFile = new UploadedFile();    
             try
             {
                 using (var client = new HttpClient())
                 {
-                    string url = $"{_baseUrl}/api/Questionario/GetUploadedFile";
+                    string url = $"{_baseUrl}/api/Questionario/GetUploadedFile?name={name}";
                     var apiresponse = await client.GetAsync(url);
 
+                    if (apiresponse.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var response = await apiresponse.Content.ReadAsByteArrayAsync();
+                        //uploadedFile = JsonConvert.DeserializeObject<UploadedFile>(response.ToString());
+                        uploadedFile.FileContent = response;
+                        uploadedFile.FileName = name;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 string msg = ex.Message;
             }
-            return uploadedFiles;
+            return uploadedFile;
         }
     }
 }

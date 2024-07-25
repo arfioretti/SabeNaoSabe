@@ -9,9 +9,16 @@
     <div>
         <label><b>Description:</b> @QuestionarioModel.Description</label>
     </div>
+    <p>
+       <img src="@(imageSource+"image0.jpg")" weight="150" height="100" />
+    </p>
     <EditForm Model="corpoList" OnSubmit="RespostaQuestionario"> 
         @foreach (var corpo in corpoList)
         {
+            <br /><br />
+            <p>
+                <img src="@(imageSource+$"image{@corpo.Id}.png")" weight="150" height="100" />
+            </p>
             <label><b>Pergunta @corpo.Id:</b>@corpo.Pergunta</label>
             <br />
             @if (corpo.Tipo == 1)
@@ -67,7 +74,11 @@
     public EventCallback SaveClicked { get; set; }
     [Parameter]
     public EventCallback CancelClicked { get; set; }
+    [Parameter]
+    public string? imageSource { get; set; }
+
     public bool exp = false;
+
 
     private async Task RespostaQuestionario()
     {

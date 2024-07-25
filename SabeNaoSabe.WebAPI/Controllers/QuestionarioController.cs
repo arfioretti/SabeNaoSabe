@@ -32,11 +32,11 @@ public class QuestionarioController : ControllerBase
     }
     [HttpGet]
     [Route("GetUploadedFile")]
-    public async Task<IEnumerable<UploadedFile>> GetUploadedFile()
-    {
-        List<UploadedFile> uploadedFiles = new List<UploadedFile>();
-
-        return uploadedFiles;
+    public async Task<ActionResult> GetUploadedFile(string name)
+    {        
+        var path=Path.Combine(Directory.GetCurrentDirectory(), "Uploaded",  name);
+        var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+        return File(stream, "application/ocetet-stream", name); ;
     }
 
     [HttpPost]
