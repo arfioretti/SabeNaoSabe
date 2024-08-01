@@ -1,23 +1,27 @@
 ﻿@using SabeNaoSabe.RazorClassLibrary.Models
 
-@if (Visible)
-{
-    <div class="confirmation-modal">
-        <h3>Confirm Deletion</h3>
-        <p>Voce tem certeza que deseja deletar?</p>
-        <div class="form-group">
-            <label form="name">Name: @questionarioModel.Name</label>
-        </div>
-        <div class="form-group">
-            <label form="description">Description: @questionarioModel.Description</label>
-        </div>
-        <div>
-            <button @onclick="DeleteQuestionario">Yes</button>
-            <button @onclick="CancelDelete">No</button>
-        </div>
+<div class="container">
+    @if (Visible)
+    {
+        <div class="confirmation-modal">
+            <h4>Deletar - Confirmação</h4>
+            <p class="text-danger">Voce tem certeza que deseja deletar?</p>
+            <div class="form-group">
+                <label form="name"><b>Name: </b>@questionarioModel.Name</label>
+            </div>
+            <div class="form-group">
+                <label form="description"><b>Description: </b>@questionarioModel.Description</label>
+            </div>
+            <br /><br />
+            <div>
+                <button class="btn btn-primary" @onclick="DeleteQuestionario">Sim</button>
+                <button class="btn btn-primary" @onclick="CancelDelete">Não</button>
+            </div>
 
-    </div>
-}
+        </div>
+    }
+</div>
+
 
 @code {
     [Parameter]

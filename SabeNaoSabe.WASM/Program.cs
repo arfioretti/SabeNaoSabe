@@ -11,4 +11,5 @@ builder.Services.AddSingleton<IQuestionarioService, QuestionarioService>();
 
 builder.Services.AddBlazorBootstrap();
 
+
 await builder.Build().RunAsync();

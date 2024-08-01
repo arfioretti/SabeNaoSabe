@@ -20,6 +20,7 @@ namespace SabeNaoSabe.Maui
 
             builder.Services.AddBlazorBootstrap();
 
+
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();

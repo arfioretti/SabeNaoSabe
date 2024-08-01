@@ -46,7 +46,7 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 
     });
 #else
-    builder.Services.AddCors(options =>
+builder.Services.AddCors(options =>
     {
         options.AddPolicy(name: "MyPolicy",
             policy =>
