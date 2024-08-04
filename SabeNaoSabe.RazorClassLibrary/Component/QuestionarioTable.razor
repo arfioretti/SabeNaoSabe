@@ -1,5 +1,6 @@
 ﻿@using SabeNaoSabe.RazorClassLibrary.Models
 
+
 <div class="container">
     @if (qList.Count == 0)
     {
@@ -12,7 +13,8 @@
             <table class="table table-hover">
                 <thead class="table-dark">
                     <tr>
-                        <th>Name</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
                         <th>Ação</th>
                     </tr>
                 </thead>
@@ -21,6 +23,7 @@
                     {
                         <tr>
                             <td>@q.Name</td>
+                            <td>@q.Description</td>
                             <td>
                                 <button class="btn btn-primary" @onclick="()=>DetailsQuestionario(q)"><i class="bi bi-question-circle-fill"></i></button>
                                 <button class="btn btn-primary" @onclick="()=>EditQuestionario(q)"><i class="bi bi-pencil-square"></i></button>
@@ -39,10 +42,6 @@
     }
 </div>
 
-
-@* <i class="bi bi-trash"></i> *@
-
-
 @code {
     [Parameter]
     public List<QuestionarioModel> qList { get; set; }
@@ -54,6 +53,8 @@
     public EventCallback<QuestionarioModel> DeleteClicked { get; set; }
     [Parameter]
     public bool Visible { get; set; }
+    [Parameter]
+    public string Title { get; set; }
 
     private void EditQuestionario(QuestionarioModel questionarioModel)
     {

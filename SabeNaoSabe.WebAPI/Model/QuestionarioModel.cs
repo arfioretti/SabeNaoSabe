@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SabeNaoSabe.WebAPI.Model
@@ -6,15 +7,25 @@ namespace SabeNaoSabe.WebAPI.Model
     public class QuestionarioModel
     {
         public int Id { get; set; }
+
         [Required]
+        [StringLength(15)]
+        [DisplayName("Nome")]
         public string Name { get; set; }
-        [Required]
 
+        [Required]
+        [StringLength(30)]
+        [DisplayName("Descrição")]
         public string Description { get; set; }
-        [Required]
 
-        public string Email { get; set;}
+        [DataType(DataType.EmailAddress)]
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
         [Required]
         public string Corpo { get; set; }
+
+        public string? Guids { get; set; }
     }
 }

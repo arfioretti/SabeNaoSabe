@@ -1,22 +1,25 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
 @using SabeNaoSabe.RazorClassLibrary.Models
 
+
 @if (Visible)
 {
     <div class="container">
+        <h4>@Title</h4>
+
         <div class="row">
             <div class="col-8">
-                <label><b>Name:</b> @QuestionarioModel.Name</label>
+                <label><b>Nome:</b> @QuestionarioModel.Name</label>
                 <div class="row">
                     <div class="col-8 bg-light p-2">
-                        <label><b>Description:</b> @QuestionarioModel.Description</label>
+                        <label><b>Descrição:</b> @QuestionarioModel.Description</label>
                     </div>
                     <div class="col-4"></div>
                 </div>
             </div>
             <div class="col-4">
                 <p>
-                    <img src="@(imageSource+"image0.jpg")" class="rounded-circle img-fluid" weight="200" height="100" />
+                    <img src="@(imageSource+QuestionarioModel.Guids+"_image0.jpg")" class="rounded-circle img-fluid" weight="200" height="100" />
                     @*<img src="images/image0.jpg" weight="200" height="100" /> *@
                 </p>
             </div>
@@ -26,7 +29,7 @@
             {
                 <p>
                     @*<img src="images/image@(corpo.Id).png" weight="200" height="100" />*@
-                    <img src="@(imageSource+$"image{@corpo.Id}.png")" class="rounded img-fluid" weight="200" height="100" />
+                    <img src="@(imageSource+QuestionarioModel.Guids+$"_image{@corpo.Id}.jpg")" class="rounded img-fluid" weight="200" height="100" />
                 </p>
                 <label><b>Pergunta @corpo.Id: </b>@corpo.Pergunta</label>
                 <br />
@@ -65,7 +68,6 @@
                 <br /><br />
             }
             <button type="submit" class="btn btn-primary m-md-1">Corrige</button>
-            <button class="btn btn-primary m-md-1" @onclick="CancelQuestionario">Cancel</button>
             <button class="btn btn-primary m-md-1" @onclick="BackQuestionario">Back</button>
         </EditForm>
     </div>
@@ -84,9 +86,8 @@
     [Parameter]
     public EventCallback SaveClicked { get; set; }
     [Parameter]
-    public EventCallback CancelClicked { get; set; }
-    [Parameter]
     public string? imageSource { get; set; }
+
 
     public bool exp = false;
 
@@ -129,13 +130,6 @@
 
         exp = true;
         this.StateHasChanged();
-    }
-    private async Task CancelQuestionario()
-    {
-        QuestionarioModel.Name = null;
-        QuestionarioModel.Description = null;
-
-        await CancelClicked.InvokeAsync(QuestionarioModel);
     }
 
     private void BackQuestionario()

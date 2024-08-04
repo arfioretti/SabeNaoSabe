@@ -57,9 +57,10 @@ namespace SabeNaoSabe.RazorClassLibrary.Services
                     var request = new HttpRequestMessage();
                     request.Method = HttpMethod.Put;
                     request.RequestUri = new Uri(url);
-                    request.Content = new StringContent(serializeContent, encoding: Encoding.UTF8, "application/json"); 
-
-                    var apiresponse = await client.SendAsync(request);
+                    request.Content = new StringContent(serializeContent, encoding: Encoding.UTF8, "application/json");
+                    var apiresponse = await client.PutAsync(url, new StringContent(serializeContent, encoding: Encoding.UTF8, "application/json"));
+                   
+                    //var apiresponse = await client.SendAsync(request);
                     if (apiresponse.StatusCode == System.Net.HttpStatusCode.OK)
                     { 
                         ret = true;

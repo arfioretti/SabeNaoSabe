@@ -5,42 +5,39 @@
 
 @if (Visible)
 {
-    <h3>@Title</h3>
+    <div class="container">
+        <h4>Questionário - Criar/Atualizar</h4>
+        <EditForm Model="QuestionarioModel" enctype="multipart/form-data" OnValidSubmit="CreateUpdateQuestionario1">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <div class="form-group">
+                <label form="name">Nome:</label>
+                <InputText id="name" @bind-Value="QuestionarioModel.Name" class="form-control"></InputText>
+                <ValidationMessage For="@(()=>QuestionarioModel.Name)"></ValidationMessage>
+            </div>
+            <div class="form-group">
+                <label form="description">Descrição:</label>
+                <InputText id="description" @bind-Value="QuestionarioModel.Description" class="form-control"></InputText>
+                <ValidationMessage For="@(()=>QuestionarioModel.Description)"></ValidationMessage>
+            </div>
+            <div class="form-group">
+                <label form="email">E-mail:</label>
+                <InputText id="email" @bind-Value="QuestionarioModel.Email" class="form-control"></InputText>
+                <ValidationMessage For="@(()=>QuestionarioModel.Email)"></ValidationMessage>
+            </div>
 
-    <EditForm Model="QuestionarioModel" enctype="multipart/form-data"  OnValidSubmit="CreateUpdateQuestionario1">
-        <DataAnnotationsValidator></DataAnnotationsValidator>
-        <div class="form-group">
-            <label form="name">Name</label>
-            <InputText id="name" @bind-Value="QuestionarioModel.Name" class="form-control"></InputText>
-            <ValidationMessage For="@(()=>QuestionarioModel.Name)"></ValidationMessage>
-        </div>
-        <div class="form-group">
-            <label form="description">Description</label>
-            <InputText id="description" @bind-Value="QuestionarioModel.Description" class="form-control"></InputText>
-            <ValidationMessage For="@(()=>QuestionarioModel.Description)"></ValidationMessage>
-        </div>
-        <div class="form-group">
-            <label form="email">Email</label>
-            <InputText id="email" @bind-Value="QuestionarioModel.Email" class="form-control"></InputText>
-            <ValidationMessage For="@(()=>QuestionarioModel.Email)"></ValidationMessage>
-        </div>
-        <div class="form-group">
-            <label form="imagemprincipal">Imagem Principal</label>
-            <InputText id="imagemprincipal" @bind-Value="QuestionarioModel.ImagemPrincipal" class="form-control"></InputText>
-            <ValidationMessage For="@(()=>QuestionarioModel.ImagemPrincipal)"></ValidationMessage>
-        </div>
-        <div class="form-group">
-            <label form="corpo">Corpo</label>
-            <InputTextArea id="corpo" @bind-Value="QuestionarioModel.Corpo" class="form-control"></InputTextArea>
-            <ValidationMessage For="@(()=>QuestionarioModel.Corpo)"></ValidationMessage>
-        </div>
+            <div class="form-group">
+                <label form="corpo">Corpo</label>
+                <InputTextArea id="corpo" @bind-Value="QuestionarioModel.Corpo" class="form-control"></InputTextArea>
+                <ValidationMessage For="@(()=>QuestionarioModel.Corpo)"></ValidationMessage>
+            </div>
 
-       <InputFile OnChange="OnInputFileChange" multiple />
+            <InputFile OnChange="OnInputFileChange" multiple />
 
-        <p>@Message</p>
-        <button type="submit" class="btn btn-primary m-md-1">Save</button>
-        <button class="btn btn-primary m-md-1" @onclick="CancelQuestionario">Cancel</button>
-    </EditForm>
+            <p>@Message</p>
+            <button type="submit" class="btn btn-primary m-md-1">Save</button>
+            <button class="btn btn-primary m-md-1" @onclick="CancelQuestionario">Cancel</button>
+        </EditForm>
+    </div>
 }
 
 @code {
@@ -68,28 +65,32 @@
     }
     private async Task CreateUpdateQuestionario1()
     {
-        int i = 0;
-        foreach (var file in selectedFiles)
+        uploadedFiles.Clear();
+        if(selectedFiles != null)
         {
-            try
+            int i = 0;
+            foreach (var file in selectedFiles)
             {
-                Stream stream = file.OpenReadStream();
-                MemoryStream ms = new MemoryStream();
-                await stream.CopyToAsync(ms);
-                stream.Close();
+                try
+                {
+                    Stream stream = file.OpenReadStream();
+                    MemoryStream ms = new MemoryStream();
+                    await stream.CopyToAsync(ms);
+                    stream.Close();
 
-                UploadedFile uploadedFile = new UploadedFile();
-                uploadedFile.FileName = file.Name;
-                uploadedFile.FileContent = ms.ToArray();
-                i++;
-                uploadedFile.Id = i.ToString();
-                ms.Close();
+                    UploadedFile uploadedFile = new UploadedFile();
+                    uploadedFile.FileName = file.Name;
+                    uploadedFile.FileContent = ms.ToArray();
+                    i++;
+                    uploadedFile.Id = i.ToString();
+                    ms.Close();
 
-                uploadedFiles.Add(uploadedFile);
-            }
-            catch (Exception e)
-            {
-                string m = e.Message;
+                    uploadedFiles.Add(uploadedFile);
+                }
+                catch (Exception e)
+                {
+                    string m = e.Message;
+                }
             }
         }
         if (Title == "Create") QuestionarioModel.Id = 0;
@@ -97,9 +98,7 @@
     }
     private async Task CancelQuestionario()
     {
-        QuestionarioModel.Name = null;
-        QuestionarioModel.Description = null;
-
+        QuestionarioModel = new();
         await CancelClicked.InvokeAsync(QuestionarioModel);
     }
 }

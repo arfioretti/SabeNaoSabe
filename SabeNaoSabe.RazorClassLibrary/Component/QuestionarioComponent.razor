@@ -10,6 +10,7 @@
 <AddButton Visible="@showAddButton" CreateUpdateQuestionarioClicked="QuestionarioCreateUpdate" ></AddButton>
 
 <QuestionarioTable  Visible="@showQuestionarioTable" 
+                    Title="Questionario - Lista"
                     qList="@questionariosList"
                     DetailsClicked="DetailsQuestionario"
                     EditClicked="EditQuestionario"
@@ -19,9 +20,10 @@
                           QuestionarioModel="@QuestionarioModel" 
                           SaveClicked="SavedClicked" 
                           CancelClicked="CanceledClicked" 
-                          title="@strTitle"/>
+                          title="Create"/>
 
-<Confirm Visible="@showConfirm" QuestionarioModel="@QuestionarioModel"
+<Confirm Visible="@showConfirm" 
+         QuestionarioModel="@QuestionarioModel"
          DeleteQuestionarioClicked="DeleteQuestionarioConfirm" 
          CancelQuestionarioClicked="CancelQuestionarioConfirm"/>
 
@@ -29,7 +31,7 @@
                      BackClicked="CanceledClicked" 
                      QuestionarioModel="@QuestionarioModel"
                      imageSource="@imageSource"
-                     Title="@strTitle" 
+                     Title="Questionario - Responder" 
                      Visible="@showQuestionarioDetails" />
 
 @code {
@@ -42,30 +44,23 @@
     [Parameter]
     public string? imageSource { get; set; }
 
-
     private bool showAddButton = true;
     private bool showQuestionarioTable = true;
     private bool showQuestionarioDetails = false;
     private bool showQuestionarioCreateUpdate = false;
     private bool showConfirm = false;
-    private string strTitle;
-
+    private string strTitle = "Questionario - Lista";
     private  List<QuestionarioModel> questionariosList = new List<QuestionarioModel>();
     private QuestionarioModel QuestionarioModel = new QuestionarioModel();
     private List<Corpo> corpoList;
-
     private UploadedFile uploadedFile = new UploadedFile();
-
-
 
     protected override async Task OnInitializedAsync()
     {
         questionariosList = await questionarioService.GetQuestionarios(baseUrl);
-        // UploadedFiles = await questionarioService.GetUploadedFile();
     }
     private void QuestionarioCreateUpdate()
     {
-        strTitle = "Create";
         showAddButton = false;
         showQuestionarioTable = false;
         showQuestionarioCreateUpdate = true;
@@ -77,15 +72,24 @@
     }
     private async void SavedClicked(List<UploadedFile>? uploadedFiles)
     {
+        strTitle = "Questionario - Criar";
+
         showAddButton = true;
         showQuestionarioTable = true;
         showQuestionarioCreateUpdate = false;
         if (uploadedFiles != null)
         {
+            Guid guid = System.Guid.NewGuid(); 
+            if (QuestionarioModel.Id == 0)
+            {
+                QuestionarioModel.Guids = guid.ToString();
+            }
+
             foreach (var uploadedFile in uploadedFiles)
             {
                 try
                 {
+                    uploadedFile.FileName = QuestionarioModel.Guids + "_" + uploadedFile.FileName;
                     await questionarioService.AddUploadedFile(uploadedFile);
                 }
                 catch (Exception e)
@@ -103,8 +107,11 @@
         {
             await questionarioService.AddQuestionario(QuestionarioModel);
         }
+
         await OnInitializedAsync();
         this.StateHasChanged();
+
+        QuestionarioModel = new();
     }
     private async void CanceledClicked()
     {
@@ -112,10 +119,13 @@
         showQuestionarioTable = true;
         showQuestionarioCreateUpdate = false;
         showQuestionarioDetails = false;
+
+        await OnInitializedAsync();
+        this.StateHasChanged();
     }
     private async void DeleteQuestionario(QuestionarioModel questionarioModel)
     {
-        strTitle = "Delete";
+        strTitle = "Questionario - Deletar";
         showAddButton = false;
         showQuestionarioTable = false;
         showQuestionarioCreateUpdate = false;
@@ -125,7 +135,7 @@
     }
     private async void DeleteQuestionarioConfirm(QuestionarioModel questionarioModel)
     {
-        strTitle = "Delete";
+        strTitle = "Questionario - Confirmar";
         var quest = await questionarioService.DeleteQuestionario(questionarioModel);
         showAddButton = true;
         showQuestionarioTable = true;
@@ -137,7 +147,7 @@
     }
     private async void EditQuestionario(QuestionarioModel questionarioModel)
     {
-        strTitle = "Edit";
+        strTitle = "Questionario - Editar";
         showAddButton = false;
         showQuestionarioTable = false;
         showQuestionarioCreateUpdate = true;
@@ -146,16 +156,14 @@
         QuestionarioModel.Description = questionarioModel.Description;
         QuestionarioModel.Email = questionarioModel.Email;
         QuestionarioModel.Corpo = questionarioModel.Corpo;
+        QuestionarioModel.Guids = questionarioModel.Guids;
     }
     private async void DetailsQuestionario(QuestionarioModel questionarioModel)
     {
-
-        strTitle = "Responder";
+        strTitle = "Questionario - Responder";
 
         // imageSource = "https://localhost:7256/api/Questionario/GetUploadedFile?name=";
         imageSource = "http://localhost:5052/api/Questionario/GetUploadedFile?name=";
-
-  
 
         showAddButton = false;
         showQuestionarioTable = false;
