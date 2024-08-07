@@ -6,7 +6,7 @@
 @if (Visible)
 {
     <div class="container">
-        <h4>Questionário - Criar/Atualizar</h4>
+        <h4>@Title</h4>
         <EditForm Model="QuestionarioModel" enctype="multipart/form-data" OnValidSubmit="CreateUpdateQuestionario1">
             <DataAnnotationsValidator></DataAnnotationsValidator>
             <div class="form-group">

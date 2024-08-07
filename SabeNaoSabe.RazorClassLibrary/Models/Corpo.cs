@@ -16,7 +16,7 @@ namespace SabeNaoSabe.RazorClassLibrary.Models
         public List<int> Gabaritos { get; set; }
         public string Explicacao { get; set; }
         public string Resultado { get; set; }
-        public string ImagemSecundaria { get; set; }
+        public int Media { get; set; }
     }
     public class Opcao
     { 

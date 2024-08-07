@@ -20,7 +20,7 @@
                           QuestionarioModel="@QuestionarioModel" 
                           SaveClicked="SavedClicked" 
                           CancelClicked="CanceledClicked" 
-                          title="Create"/>
+                          title="@strTitle"/>
 
 <Confirm Visible="@showConfirm" 
          QuestionarioModel="@QuestionarioModel"
@@ -31,7 +31,7 @@
                      BackClicked="CanceledClicked" 
                      QuestionarioModel="@QuestionarioModel"
                      imageSource="@imageSource"
-                     Title="Questionario - Responder" 
+                     Title="Questionário - Responder" 
                      Visible="@showQuestionarioDetails" />
 
 @code {
@@ -61,6 +61,8 @@
     }
     private void QuestionarioCreateUpdate()
     {
+        strTitle = "Questionário - Adicionar";
+
         showAddButton = false;
         showQuestionarioTable = false;
         showQuestionarioCreateUpdate = true;
@@ -72,8 +74,6 @@
     }
     private async void SavedClicked(List<UploadedFile>? uploadedFiles)
     {
-        strTitle = "Questionario - Criar";
-
         showAddButton = true;
         showQuestionarioTable = true;
         showQuestionarioCreateUpdate = false;
@@ -147,7 +147,7 @@
     }
     private async void EditQuestionario(QuestionarioModel questionarioModel)
     {
-        strTitle = "Questionario - Editar";
+        strTitle = "Questionário - Editar";
         showAddButton = false;
         showQuestionarioTable = false;
         showQuestionarioCreateUpdate = true;
@@ -160,7 +160,7 @@
     }
     private async void DetailsQuestionario(QuestionarioModel questionarioModel)
     {
-        strTitle = "Questionario - Responder";
+        strTitle = "Questionário - Responder";
 
         // imageSource = "https://localhost:7256/api/Questionario/GetUploadedFile?name=";
         imageSource = "http://localhost:5052/api/Questionario/GetUploadedFile?name=";
@@ -240,7 +240,7 @@
                             corpo.Explicacao = line;
                             break;
                         case 6:
-                            corpo.ImagemSecundaria = line;
+                            corpo.Media = Int32.Parse(line);
                             break;
                     }
                  break;

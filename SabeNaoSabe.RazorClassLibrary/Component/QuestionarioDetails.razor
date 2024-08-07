@@ -19,6 +19,7 @@
             </div>
             <div class="col-4">
                 <p>
+
                     <img src="@(imageSource+QuestionarioModel.Guids+"_image0.jpg")" class="rounded-circle img-fluid" weight="200" height="100" />
                     @*<img src="images/image0.jpg" weight="200" height="100" /> *@
                 </p>
@@ -29,7 +30,12 @@
             {
                 <p>
                     @*<img src="images/image@(corpo.Id).png" weight="200" height="100" />*@
-                    <img src="@(imageSource+QuestionarioModel.Guids+$"_image{@corpo.Id}.jpg")" class="rounded img-fluid" weight="200" height="100" />
+                    @{
+                        if (corpo.Media == 1)
+                        {
+                            <img src="@(imageSource+QuestionarioModel.Guids+$"_image{@corpo.Id}.jpg")" class="rounded img-fluid" weight="200" height="100" />
+                        }
+                    }
                 </p>
                 <label><b>Pergunta @corpo.Id: </b>@corpo.Pergunta</label>
                 <br />
@@ -68,7 +74,7 @@
                 <br /><br />
             }
             <button type="submit" class="btn btn-primary m-md-1">Corrige</button>
-            <button class="btn btn-primary m-md-1" @onclick="BackQuestionario">Back</button>
+            <button class="btn btn-primary m-md-1" @onclick="BackQuestionario">Volta</button>
         </EditForm>
     </div>
 }
@@ -109,15 +115,37 @@
             }
             else
             {
-                int total = 0;
-                foreach(var gabarito in corpo.Gabaritos)
+                bool flag = false;
+                foreach(var opcao in corpo.Opcoes)
                 {
-                    foreach(var opcao in corpo.Opcoes)
+                    if (opcao.Checked)
                     {
-                        if (opcao.Id == gabarito && opcao.Checked) total++;
+                        flag = false;
+                        foreach(var gabarito in corpo.Gabaritos)
+                        {
+                            if(opcao.Id == gabarito)
+                            {
+                                flag = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        flag = true;
+                        foreach (var gabarito in corpo.Gabaritos)
+                        {
+                            if (opcao.Id == gabarito)
+                            {
+                                flag = false;
+                            }
+                        }
+                    }
+                    if (!flag)
+                    {
+                        break;
                     }
                 }
-                if (total == corpo.Gabaritos.Count)
+                if (flag)
                 {
                     corpo.Resultado = "Acertou";
                 }
@@ -127,7 +155,6 @@
                 }
             }
         }
-
         exp = true;
         this.StateHasChanged();
     }
