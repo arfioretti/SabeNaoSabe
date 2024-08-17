@@ -163,9 +163,17 @@
         strTitle = "Questionário - Responder";
 
         // imageSource = "https://localhost:7256/api/Questionario/GetUploadedFile?name=";
-        imageSource = "http://localhost:5052/api/Questionario/GetUploadedFile?name=";
 
-        showAddButton = false;
+
+        #if !DEBUG
+            imageSource = "https://sabenaosabewebapi20240708194323.azurewebsites.net/api/Questionario/GetUploadedFile?name=";
+        #else
+            imageSource = "http://localhost:5052/api/Questionario/GetUploadedFile?name=";
+        #endif
+
+
+
+    showAddButton = false;
         showQuestionarioTable = false;
         showQuestionarioCreateUpdate = false;
         showQuestionarioDetails = true;
